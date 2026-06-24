@@ -14,7 +14,9 @@ import { Route as ReportsRouteImport } from './routes/reports'
 import { Route as RecommendationsRouteImport } from './routes/recommendations'
 import { Route as PostAnalyticsRouteImport } from './routes/post-analytics'
 import { Route as PositioningRouteImport } from './routes/positioning'
+import { Route as OpportunitiesRouteImport } from './routes/opportunities'
 import { Route as NewsRouteImport } from './routes/news'
+import { Route as MediaWatchRouteImport } from './routes/media-watch'
 import { Route as IssueRadarRouteImport } from './routes/issue-radar'
 import { Route as AccountsRouteImport } from './routes/accounts'
 import { Route as IndexRouteImport } from './routes/index'
@@ -44,9 +46,19 @@ const PositioningRoute = PositioningRouteImport.update({
   path: '/positioning',
   getParentRoute: () => rootRouteImport,
 } as any)
+const OpportunitiesRoute = OpportunitiesRouteImport.update({
+  id: '/opportunities',
+  path: '/opportunities',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const NewsRoute = NewsRouteImport.update({
   id: '/news',
   path: '/news',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const MediaWatchRoute = MediaWatchRouteImport.update({
+  id: '/media-watch',
+  path: '/media-watch',
   getParentRoute: () => rootRouteImport,
 } as any)
 const IssueRadarRoute = IssueRadarRouteImport.update({
@@ -69,7 +81,9 @@ export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
   '/accounts': typeof AccountsRoute
   '/issue-radar': typeof IssueRadarRoute
+  '/media-watch': typeof MediaWatchRoute
   '/news': typeof NewsRoute
+  '/opportunities': typeof OpportunitiesRoute
   '/positioning': typeof PositioningRoute
   '/post-analytics': typeof PostAnalyticsRoute
   '/recommendations': typeof RecommendationsRoute
@@ -80,7 +94,9 @@ export interface FileRoutesByTo {
   '/': typeof IndexRoute
   '/accounts': typeof AccountsRoute
   '/issue-radar': typeof IssueRadarRoute
+  '/media-watch': typeof MediaWatchRoute
   '/news': typeof NewsRoute
+  '/opportunities': typeof OpportunitiesRoute
   '/positioning': typeof PositioningRoute
   '/post-analytics': typeof PostAnalyticsRoute
   '/recommendations': typeof RecommendationsRoute
@@ -92,7 +108,9 @@ export interface FileRoutesById {
   '/': typeof IndexRoute
   '/accounts': typeof AccountsRoute
   '/issue-radar': typeof IssueRadarRoute
+  '/media-watch': typeof MediaWatchRoute
   '/news': typeof NewsRoute
+  '/opportunities': typeof OpportunitiesRoute
   '/positioning': typeof PositioningRoute
   '/post-analytics': typeof PostAnalyticsRoute
   '/recommendations': typeof RecommendationsRoute
@@ -105,7 +123,9 @@ export interface FileRouteTypes {
     | '/'
     | '/accounts'
     | '/issue-radar'
+    | '/media-watch'
     | '/news'
+    | '/opportunities'
     | '/positioning'
     | '/post-analytics'
     | '/recommendations'
@@ -116,7 +136,9 @@ export interface FileRouteTypes {
     | '/'
     | '/accounts'
     | '/issue-radar'
+    | '/media-watch'
     | '/news'
+    | '/opportunities'
     | '/positioning'
     | '/post-analytics'
     | '/recommendations'
@@ -127,7 +149,9 @@ export interface FileRouteTypes {
     | '/'
     | '/accounts'
     | '/issue-radar'
+    | '/media-watch'
     | '/news'
+    | '/opportunities'
     | '/positioning'
     | '/post-analytics'
     | '/recommendations'
@@ -139,7 +163,9 @@ export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
   AccountsRoute: typeof AccountsRoute
   IssueRadarRoute: typeof IssueRadarRoute
+  MediaWatchRoute: typeof MediaWatchRoute
   NewsRoute: typeof NewsRoute
+  OpportunitiesRoute: typeof OpportunitiesRoute
   PositioningRoute: typeof PositioningRoute
   PostAnalyticsRoute: typeof PostAnalyticsRoute
   RecommendationsRoute: typeof RecommendationsRoute
@@ -184,11 +210,25 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof PositioningRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/opportunities': {
+      id: '/opportunities'
+      path: '/opportunities'
+      fullPath: '/opportunities'
+      preLoaderRoute: typeof OpportunitiesRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/news': {
       id: '/news'
       path: '/news'
       fullPath: '/news'
       preLoaderRoute: typeof NewsRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/media-watch': {
+      id: '/media-watch'
+      path: '/media-watch'
+      fullPath: '/media-watch'
+      preLoaderRoute: typeof MediaWatchRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/issue-radar': {
@@ -219,7 +259,9 @@ const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
   AccountsRoute: AccountsRoute,
   IssueRadarRoute: IssueRadarRoute,
+  MediaWatchRoute: MediaWatchRoute,
   NewsRoute: NewsRoute,
+  OpportunitiesRoute: OpportunitiesRoute,
   PositioningRoute: PositioningRoute,
   PostAnalyticsRoute: PostAnalyticsRoute,
   RecommendationsRoute: RecommendationsRoute,

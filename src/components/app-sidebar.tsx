@@ -9,6 +9,8 @@ import {
   Compass,
   Lightbulb,
   FileText,
+  Eye,
+  Sparkles,
 } from "lucide-react";
 import {
   Sidebar,
@@ -30,6 +32,8 @@ const items = [
   { title: "Sentiment", url: "/sentiment", icon: Smile },
   { title: "Issue Radar", url: "/issue-radar", icon: Radar },
   { title: "News & Hashtags", url: "/news", icon: Newspaper },
+  { title: "Media Watch", url: "/media-watch", icon: Eye },
+  { title: "Opportunities", url: "/opportunities", icon: Sparkles },
   { title: "Positioning", url: "/positioning", icon: Compass },
   { title: "Recommendations", url: "/recommendations", icon: Lightbulb },
   { title: "Reports", url: "/reports", icon: FileText },
