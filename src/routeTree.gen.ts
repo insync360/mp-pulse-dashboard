@@ -9,8 +9,56 @@
 // Additionally, you should also exclude this file from your linter and/or formatter to prevent it from being checked or modified.
 
 import { Route as rootRouteImport } from './routes/__root'
+import { Route as SentimentRouteImport } from './routes/sentiment'
+import { Route as ReportsRouteImport } from './routes/reports'
+import { Route as RecommendationsRouteImport } from './routes/recommendations'
+import { Route as PostAnalyticsRouteImport } from './routes/post-analytics'
+import { Route as PositioningRouteImport } from './routes/positioning'
+import { Route as NewsRouteImport } from './routes/news'
+import { Route as IssueRadarRouteImport } from './routes/issue-radar'
+import { Route as AccountsRouteImport } from './routes/accounts'
 import { Route as IndexRouteImport } from './routes/index'
 
+const SentimentRoute = SentimentRouteImport.update({
+  id: '/sentiment',
+  path: '/sentiment',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const ReportsRoute = ReportsRouteImport.update({
+  id: '/reports',
+  path: '/reports',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const RecommendationsRoute = RecommendationsRouteImport.update({
+  id: '/recommendations',
+  path: '/recommendations',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const PostAnalyticsRoute = PostAnalyticsRouteImport.update({
+  id: '/post-analytics',
+  path: '/post-analytics',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const PositioningRoute = PositioningRouteImport.update({
+  id: '/positioning',
+  path: '/positioning',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const NewsRoute = NewsRouteImport.update({
+  id: '/news',
+  path: '/news',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const IssueRadarRoute = IssueRadarRouteImport.update({
+  id: '/issue-radar',
+  path: '/issue-radar',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const AccountsRoute = AccountsRouteImport.update({
+  id: '/accounts',
+  path: '/accounts',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const IndexRoute = IndexRouteImport.update({
   id: '/',
   path: '/',
@@ -19,28 +67,144 @@ const IndexRoute = IndexRouteImport.update({
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
+  '/accounts': typeof AccountsRoute
+  '/issue-radar': typeof IssueRadarRoute
+  '/news': typeof NewsRoute
+  '/positioning': typeof PositioningRoute
+  '/post-analytics': typeof PostAnalyticsRoute
+  '/recommendations': typeof RecommendationsRoute
+  '/reports': typeof ReportsRoute
+  '/sentiment': typeof SentimentRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
+  '/accounts': typeof AccountsRoute
+  '/issue-radar': typeof IssueRadarRoute
+  '/news': typeof NewsRoute
+  '/positioning': typeof PositioningRoute
+  '/post-analytics': typeof PostAnalyticsRoute
+  '/recommendations': typeof RecommendationsRoute
+  '/reports': typeof ReportsRoute
+  '/sentiment': typeof SentimentRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
+  '/accounts': typeof AccountsRoute
+  '/issue-radar': typeof IssueRadarRoute
+  '/news': typeof NewsRoute
+  '/positioning': typeof PositioningRoute
+  '/post-analytics': typeof PostAnalyticsRoute
+  '/recommendations': typeof RecommendationsRoute
+  '/reports': typeof ReportsRoute
+  '/sentiment': typeof SentimentRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
-  fullPaths: '/'
+  fullPaths:
+    | '/'
+    | '/accounts'
+    | '/issue-radar'
+    | '/news'
+    | '/positioning'
+    | '/post-analytics'
+    | '/recommendations'
+    | '/reports'
+    | '/sentiment'
   fileRoutesByTo: FileRoutesByTo
-  to: '/'
-  id: '__root__' | '/'
+  to:
+    | '/'
+    | '/accounts'
+    | '/issue-radar'
+    | '/news'
+    | '/positioning'
+    | '/post-analytics'
+    | '/recommendations'
+    | '/reports'
+    | '/sentiment'
+  id:
+    | '__root__'
+    | '/'
+    | '/accounts'
+    | '/issue-radar'
+    | '/news'
+    | '/positioning'
+    | '/post-analytics'
+    | '/recommendations'
+    | '/reports'
+    | '/sentiment'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
+  AccountsRoute: typeof AccountsRoute
+  IssueRadarRoute: typeof IssueRadarRoute
+  NewsRoute: typeof NewsRoute
+  PositioningRoute: typeof PositioningRoute
+  PostAnalyticsRoute: typeof PostAnalyticsRoute
+  RecommendationsRoute: typeof RecommendationsRoute
+  ReportsRoute: typeof ReportsRoute
+  SentimentRoute: typeof SentimentRoute
 }
 
 declare module '@tanstack/react-router' {
   interface FileRoutesByPath {
+    '/sentiment': {
+      id: '/sentiment'
+      path: '/sentiment'
+      fullPath: '/sentiment'
+      preLoaderRoute: typeof SentimentRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/reports': {
+      id: '/reports'
+      path: '/reports'
+      fullPath: '/reports'
+      preLoaderRoute: typeof ReportsRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/recommendations': {
+      id: '/recommendations'
+      path: '/recommendations'
+      fullPath: '/recommendations'
+      preLoaderRoute: typeof RecommendationsRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/post-analytics': {
+      id: '/post-analytics'
+      path: '/post-analytics'
+      fullPath: '/post-analytics'
+      preLoaderRoute: typeof PostAnalyticsRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/positioning': {
+      id: '/positioning'
+      path: '/positioning'
+      fullPath: '/positioning'
+      preLoaderRoute: typeof PositioningRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/news': {
+      id: '/news'
+      path: '/news'
+      fullPath: '/news'
+      preLoaderRoute: typeof NewsRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/issue-radar': {
+      id: '/issue-radar'
+      path: '/issue-radar'
+      fullPath: '/issue-radar'
+      preLoaderRoute: typeof IssueRadarRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/accounts': {
+      id: '/accounts'
+      path: '/accounts'
+      fullPath: '/accounts'
+      preLoaderRoute: typeof AccountsRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/': {
       id: '/'
       path: '/'
@@ -53,6 +217,14 @@ declare module '@tanstack/react-router' {
 
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
+  AccountsRoute: AccountsRoute,
+  IssueRadarRoute: IssueRadarRoute,
+  NewsRoute: NewsRoute,
+  PositioningRoute: PositioningRoute,
+  PostAnalyticsRoute: PostAnalyticsRoute,
+  RecommendationsRoute: RecommendationsRoute,
+  ReportsRoute: ReportsRoute,
+  SentimentRoute: SentimentRoute,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)
