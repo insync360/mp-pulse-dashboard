@@ -11,6 +11,7 @@
 import { Route as rootRouteImport } from './routes/__root'
 import { Route as VisitorsRouteImport } from './routes/visitors'
 import { Route as StakeholderCrmRouteImport } from './routes/stakeholder-crm'
+import { Route as SettingsTeamRouteImport } from './routes/settings-team'
 import { Route as SentimentRouteImport } from './routes/sentiment'
 import { Route as ReportsRouteImport } from './routes/reports'
 import { Route as RecommendationsRouteImport } from './routes/recommendations'
@@ -38,6 +39,11 @@ const VisitorsRoute = VisitorsRouteImport.update({
 const StakeholderCrmRoute = StakeholderCrmRouteImport.update({
   id: '/stakeholder-crm',
   path: '/stakeholder-crm',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const SettingsTeamRoute = SettingsTeamRouteImport.update({
+  id: '/settings-team',
+  path: '/settings-team',
   getParentRoute: () => rootRouteImport,
 } as any)
 const SentimentRoute = SentimentRouteImport.update({
@@ -150,6 +156,7 @@ export interface FileRoutesByFullPath {
   '/recommendations': typeof RecommendationsRoute
   '/reports': typeof ReportsRoute
   '/sentiment': typeof SentimentRoute
+  '/settings-team': typeof SettingsTeamRoute
   '/stakeholder-crm': typeof StakeholderCrmRoute
   '/visitors': typeof VisitorsRoute
 }
@@ -172,6 +179,7 @@ export interface FileRoutesByTo {
   '/recommendations': typeof RecommendationsRoute
   '/reports': typeof ReportsRoute
   '/sentiment': typeof SentimentRoute
+  '/settings-team': typeof SettingsTeamRoute
   '/stakeholder-crm': typeof StakeholderCrmRoute
   '/visitors': typeof VisitorsRoute
 }
@@ -195,6 +203,7 @@ export interface FileRoutesById {
   '/recommendations': typeof RecommendationsRoute
   '/reports': typeof ReportsRoute
   '/sentiment': typeof SentimentRoute
+  '/settings-team': typeof SettingsTeamRoute
   '/stakeholder-crm': typeof StakeholderCrmRoute
   '/visitors': typeof VisitorsRoute
 }
@@ -219,6 +228,7 @@ export interface FileRouteTypes {
     | '/recommendations'
     | '/reports'
     | '/sentiment'
+    | '/settings-team'
     | '/stakeholder-crm'
     | '/visitors'
   fileRoutesByTo: FileRoutesByTo
@@ -241,6 +251,7 @@ export interface FileRouteTypes {
     | '/recommendations'
     | '/reports'
     | '/sentiment'
+    | '/settings-team'
     | '/stakeholder-crm'
     | '/visitors'
   id:
@@ -263,6 +274,7 @@ export interface FileRouteTypes {
     | '/recommendations'
     | '/reports'
     | '/sentiment'
+    | '/settings-team'
     | '/stakeholder-crm'
     | '/visitors'
   fileRoutesById: FileRoutesById
@@ -286,6 +298,7 @@ export interface RootRouteChildren {
   RecommendationsRoute: typeof RecommendationsRoute
   ReportsRoute: typeof ReportsRoute
   SentimentRoute: typeof SentimentRoute
+  SettingsTeamRoute: typeof SettingsTeamRoute
   StakeholderCrmRoute: typeof StakeholderCrmRoute
   VisitorsRoute: typeof VisitorsRoute
 }
@@ -304,6 +317,13 @@ declare module '@tanstack/react-router' {
       path: '/stakeholder-crm'
       fullPath: '/stakeholder-crm'
       preLoaderRoute: typeof StakeholderCrmRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/settings-team': {
+      id: '/settings-team'
+      path: '/settings-team'
+      fullPath: '/settings-team'
+      preLoaderRoute: typeof SettingsTeamRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/sentiment': {
@@ -454,6 +474,7 @@ const rootRouteChildren: RootRouteChildren = {
   RecommendationsRoute: RecommendationsRoute,
   ReportsRoute: ReportsRoute,
   SentimentRoute: SentimentRoute,
+  SettingsTeamRoute: SettingsTeamRoute,
   StakeholderCrmRoute: StakeholderCrmRoute,
   VisitorsRoute: VisitorsRoute,
 }
