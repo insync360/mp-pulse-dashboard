@@ -1,6 +1,21 @@
 import { createFileRoute } from "@tanstack/react-router";
 import { useMemo, useState } from "react";
-import { AlertTriangle, ExternalLink, Flame, TrendingUp, X } from "lucide-react";
+import { AlertTriangle, ExternalLink, Flame, TrendingUp, X, Hash } from "lucide-react";
+
+const HASHTAGS = [
+  { tag: "#BengaluruTraffic", volume: 48200, change: 22.4, level: "City" },
+  { tag: "#CauveryWater", volume: 36100, change: 14.1, level: "City" },
+  { tag: "#FixOurRoads", volume: 21800, change: 31.7, level: "City" },
+  { tag: "#NammaMetro", volume: 18900, change: 8.2, level: "City" },
+  { tag: "#SaveOurLakes", volume: 9800, change: 12.3, level: "City" },
+  { tag: "#KannadigaJobs", volume: 88200, change: 41.2, level: "State" },
+  { tag: "#Mekedatu", volume: 33800, change: 12.9, level: "State" },
+  { tag: "#Budget2026", volume: 412000, change: 28.4, level: "National" },
+  { tag: "#AIBill", volume: 98400, change: 34.2, level: "National" },
+];
+
+const fmtVol = (n: number) =>
+  n >= 1_000_000 ? `${(n / 1_000_000).toFixed(1)}M` : n >= 1_000 ? `${(n / 1_000).toFixed(1)}K` : `${n}`;
 import { Card } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
@@ -363,91 +378,126 @@ function MediaWatchPage() {
         </Card>
       )}
 
-      {/* Tabs + Filters */}
-      <Tabs value={level} onValueChange={(v) => setLevel(v as Level)}>
-        <div className="flex flex-wrap items-center justify-between gap-3">
-          <TabsList>
-            <TabsTrigger value="city">City · Bengaluru</TabsTrigger>
-            <TabsTrigger value="state">State · Karnataka</TabsTrigger>
-            <TabsTrigger value="national">National</TabsTrigger>
-          </TabsList>
+      {/* Outer view tabs: News Feed vs Trending Hashtags */}
+      <Tabs defaultValue="feed">
+        <TabsList>
+          <TabsTrigger value="feed">News Feed</TabsTrigger>
+          <TabsTrigger value="hashtags">Trending Hashtags</TabsTrigger>
+        </TabsList>
 
-          <div className="flex items-center gap-2">
-            <div className="flex items-center gap-1 text-xs text-slate-500">
-              <TrendingUp className="h-3.5 w-3.5" /> Sorted by traction
+        <TabsContent value="feed" className="mt-4 space-y-4">
+          <Tabs value={level} onValueChange={(v) => setLevel(v as Level)}>
+            <div className="flex flex-wrap items-center justify-between gap-3">
+              <TabsList>
+                <TabsTrigger value="city">City · Bengaluru</TabsTrigger>
+                <TabsTrigger value="state">State · Karnataka</TabsTrigger>
+                <TabsTrigger value="national">National</TabsTrigger>
+              </TabsList>
+
+              <div className="flex items-center gap-2">
+                <div className="flex items-center gap-1 text-xs text-slate-500">
+                  <TrendingUp className="h-3.5 w-3.5" /> Sorted by traction
+                </div>
+                <Select value={sentimentFilter} onValueChange={setSentimentFilter}>
+                  <SelectTrigger className="h-8 w-[140px] text-xs">
+                    <SelectValue placeholder="Sentiment" />
+                  </SelectTrigger>
+                  <SelectContent>
+                    <SelectItem value="all">All sentiment</SelectItem>
+                    <SelectItem value="Positive">Positive</SelectItem>
+                    <SelectItem value="Neutral">Neutral</SelectItem>
+                    <SelectItem value="Negative">Negative</SelectItem>
+                  </SelectContent>
+                </Select>
+                <Select value={topicFilter} onValueChange={setTopicFilter}>
+                  <SelectTrigger className="h-8 w-[140px] text-xs">
+                    <SelectValue placeholder="Topic" />
+                  </SelectTrigger>
+                  <SelectContent>
+                    <SelectItem value="all">All topics</SelectItem>
+                    {topics.map((t) => (
+                      <SelectItem key={t} value={t}>{t}</SelectItem>
+                    ))}
+                  </SelectContent>
+                </Select>
+              </div>
             </div>
-            <Select value={sentimentFilter} onValueChange={setSentimentFilter}>
-              <SelectTrigger className="h-8 w-[140px] text-xs">
-                <SelectValue placeholder="Sentiment" />
-              </SelectTrigger>
-              <SelectContent>
-                <SelectItem value="all">All sentiment</SelectItem>
-                <SelectItem value="Positive">Positive</SelectItem>
-                <SelectItem value="Neutral">Neutral</SelectItem>
-                <SelectItem value="Negative">Negative</SelectItem>
-              </SelectContent>
-            </Select>
-            <Select value={topicFilter} onValueChange={setTopicFilter}>
-              <SelectTrigger className="h-8 w-[140px] text-xs">
-                <SelectValue placeholder="Topic" />
-              </SelectTrigger>
-              <SelectContent>
-                <SelectItem value="all">All topics</SelectItem>
-                {topics.map((t) => (
-                  <SelectItem key={t} value={t}>
-                    {t}
-                  </SelectItem>
-                ))}
-              </SelectContent>
-            </Select>
-          </div>
-        </div>
 
-        <TabsContent value={level} className="mt-4">
-          <div className="grid gap-3">
-            {visible.map((a) => (
-              <Card key={a.id} className="p-4 hover:shadow-md transition-shadow">
-                <div className="flex items-start justify-between gap-4">
-                  <div className="flex-1 min-w-0">
-                    <div className="flex items-center gap-2 text-[11px] text-slate-500 mb-1.5 flex-wrap">
-                      <span className="font-semibold text-navy">{a.source}</span>
-                      <Badge
-                        variant="outline"
-                        className={`text-[10px] ${
-                          a.tier === 1
-                            ? "bg-navy/5 text-navy border-navy/20"
-                            : "bg-slate-50 text-slate-600 border-slate-200"
-                        }`}
-                      >
-                        Tier {a.tier}
-                      </Badge>
-                      <span>•</span>
-                      <span>{a.time}</span>
-                      <span>•</span>
-                      <span className="text-slate-600">{a.topic}</span>
+            <TabsContent value={level} className="mt-4">
+              <div className="grid gap-3">
+                {visible.map((a) => (
+                  <Card key={a.id} className="p-4 hover:shadow-md transition-shadow">
+                    <div className="flex items-start justify-between gap-4">
+                      <div className="flex-1 min-w-0">
+                        <div className="flex items-center gap-2 text-[11px] text-slate-500 mb-1.5 flex-wrap">
+                          <span className="font-semibold text-navy">{a.source}</span>
+                          <Badge
+                            variant="outline"
+                            className={`text-[10px] ${
+                              a.tier === 1
+                                ? "bg-navy/5 text-navy border-navy/20"
+                                : "bg-slate-50 text-slate-600 border-slate-200"
+                            }`}
+                          >
+                            Tier {a.tier}
+                          </Badge>
+                          <span>•</span>
+                          <span>{a.time}</span>
+                          <span>•</span>
+                          <span className="text-slate-600">{a.topic}</span>
+                        </div>
+                        <div className="text-sm font-medium text-slate-900 leading-snug">
+                          {a.headline}
+                        </div>
+                      </div>
+                      <div className="flex flex-col items-end gap-2 shrink-0">
+                        <Badge variant="outline" className={sentimentClass[a.sentiment]}>
+                          {a.sentiment}
+                        </Badge>
+                        <TractionMeter value={a.traction} />
+                        <button className="text-[11px] text-slate-500 hover:text-navy flex items-center gap-1">
+                          Open <ExternalLink className="h-3 w-3" />
+                        </button>
+                      </div>
                     </div>
-                    <div className="text-sm font-medium text-slate-900 leading-snug">
-                      {a.headline}
+                  </Card>
+                ))}
+                {visible.length === 0 && (
+                  <Card className="p-8 text-center text-sm text-slate-500">
+                    No articles match the current filters.
+                  </Card>
+                )}
+              </div>
+            </TabsContent>
+          </Tabs>
+        </TabsContent>
+
+        <TabsContent value="hashtags" className="mt-4">
+          <Card className="p-5">
+            <div className="mb-4 flex items-center justify-between">
+              <div className="flex items-center gap-2">
+                <Hash className="h-4 w-4 text-saffron" />
+                <h2 className="text-sm font-semibold text-navy">Trending Hashtags</h2>
+              </div>
+              <span className="text-[10px] uppercase tracking-wider text-slate-500">last 24h</span>
+            </div>
+            <div className="divide-y divide-border/60">
+              {HASHTAGS.map((h, i) => (
+                <div key={h.tag} className="flex items-center gap-4 py-3">
+                  <span className="w-6 text-xs font-mono text-slate-400">{i + 1}</span>
+                  <div className="flex-1">
+                    <div className="text-sm font-semibold text-saffron">{h.tag}</div>
+                    <div className="text-[11px] text-slate-500 tabular-nums">
+                      {fmtVol(h.volume)} mentions · {h.level}
                     </div>
                   </div>
-                  <div className="flex flex-col items-end gap-2 shrink-0">
-                    <Badge variant="outline" className={sentimentClass[a.sentiment]}>
-                      {a.sentiment}
-                    </Badge>
-                    <TractionMeter value={a.traction} />
-                    <button className="text-[11px] text-slate-500 hover:text-navy flex items-center gap-1">
-                      Open <ExternalLink className="h-3 w-3" />
-                    </button>
+                  <div className="flex items-center gap-1 text-xs font-medium text-emerald-600">
+                    <TrendingUp className="h-3 w-3" />+{h.change.toFixed(1)}%
                   </div>
                 </div>
-              </Card>
-            ))}
-            {visible.length === 0 && (
-              <Card className="p-8 text-center text-sm text-slate-500">
-                No articles match the current filters.
-              </Card>
-            )}
-          </div>
+              ))}
+            </div>
+          </Card>
         </TabsContent>
       </Tabs>
 

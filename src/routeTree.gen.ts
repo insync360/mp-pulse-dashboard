@@ -9,18 +9,41 @@
 // Additionally, you should also exclude this file from your linter and/or formatter to prevent it from being checked or modified.
 
 import { Route as rootRouteImport } from './routes/__root'
+import { Route as VisitorsRouteImport } from './routes/visitors'
+import { Route as StakeholderCrmRouteImport } from './routes/stakeholder-crm'
+import { Route as SettingsTeamRouteImport } from './routes/settings-team'
 import { Route as SentimentRouteImport } from './routes/sentiment'
 import { Route as ReportsRouteImport } from './routes/reports'
 import { Route as RecommendationsRouteImport } from './routes/recommendations'
+import { Route as RecommendationLettersRouteImport } from './routes/recommendation-letters'
 import { Route as PostAnalyticsRouteImport } from './routes/post-analytics'
 import { Route as PositioningRouteImport } from './routes/positioning'
+import { Route as ParliamentTrackerRouteImport } from './routes/parliament-tracker'
 import { Route as OpportunitiesRouteImport } from './routes/opportunities'
-import { Route as NewsRouteImport } from './routes/news'
 import { Route as MediaWatchRouteImport } from './routes/media-watch'
 import { Route as IssueRadarRouteImport } from './routes/issue-radar'
-import { Route as AccountsRouteImport } from './routes/accounts'
+import { Route as GrievancesRouteImport } from './routes/grievances'
+import { Route as FundsProjectsRouteImport } from './routes/funds-projects'
+import { Route as DailyBriefingRouteImport } from './routes/daily-briefing'
+import { Route as CalendarRouteImport } from './routes/calendar'
+import { Route as BriefingsSpeechesRouteImport } from './routes/briefings-speeches'
 import { Route as IndexRouteImport } from './routes/index'
 
+const VisitorsRoute = VisitorsRouteImport.update({
+  id: '/visitors',
+  path: '/visitors',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const StakeholderCrmRoute = StakeholderCrmRouteImport.update({
+  id: '/stakeholder-crm',
+  path: '/stakeholder-crm',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const SettingsTeamRoute = SettingsTeamRouteImport.update({
+  id: '/settings-team',
+  path: '/settings-team',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const SentimentRoute = SentimentRouteImport.update({
   id: '/sentiment',
   path: '/sentiment',
@@ -36,6 +59,11 @@ const RecommendationsRoute = RecommendationsRouteImport.update({
   path: '/recommendations',
   getParentRoute: () => rootRouteImport,
 } as any)
+const RecommendationLettersRoute = RecommendationLettersRouteImport.update({
+  id: '/recommendation-letters',
+  path: '/recommendation-letters',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const PostAnalyticsRoute = PostAnalyticsRouteImport.update({
   id: '/post-analytics',
   path: '/post-analytics',
@@ -46,14 +74,14 @@ const PositioningRoute = PositioningRouteImport.update({
   path: '/positioning',
   getParentRoute: () => rootRouteImport,
 } as any)
+const ParliamentTrackerRoute = ParliamentTrackerRouteImport.update({
+  id: '/parliament-tracker',
+  path: '/parliament-tracker',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const OpportunitiesRoute = OpportunitiesRouteImport.update({
   id: '/opportunities',
   path: '/opportunities',
-  getParentRoute: () => rootRouteImport,
-} as any)
-const NewsRoute = NewsRouteImport.update({
-  id: '/news',
-  path: '/news',
   getParentRoute: () => rootRouteImport,
 } as any)
 const MediaWatchRoute = MediaWatchRouteImport.update({
@@ -66,9 +94,29 @@ const IssueRadarRoute = IssueRadarRouteImport.update({
   path: '/issue-radar',
   getParentRoute: () => rootRouteImport,
 } as any)
-const AccountsRoute = AccountsRouteImport.update({
-  id: '/accounts',
-  path: '/accounts',
+const GrievancesRoute = GrievancesRouteImport.update({
+  id: '/grievances',
+  path: '/grievances',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const FundsProjectsRoute = FundsProjectsRouteImport.update({
+  id: '/funds-projects',
+  path: '/funds-projects',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const DailyBriefingRoute = DailyBriefingRouteImport.update({
+  id: '/daily-briefing',
+  path: '/daily-briefing',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const CalendarRoute = CalendarRouteImport.update({
+  id: '/calendar',
+  path: '/calendar',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const BriefingsSpeechesRoute = BriefingsSpeechesRouteImport.update({
+  id: '/briefings-speeches',
+  path: '/briefings-speeches',
   getParentRoute: () => rootRouteImport,
 } as any)
 const IndexRoute = IndexRouteImport.update({
@@ -79,102 +127,179 @@ const IndexRoute = IndexRouteImport.update({
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
-  '/accounts': typeof AccountsRoute
+  '/briefings-speeches': typeof BriefingsSpeechesRoute
+  '/calendar': typeof CalendarRoute
+  '/daily-briefing': typeof DailyBriefingRoute
+  '/funds-projects': typeof FundsProjectsRoute
+  '/grievances': typeof GrievancesRoute
   '/issue-radar': typeof IssueRadarRoute
   '/media-watch': typeof MediaWatchRoute
-  '/news': typeof NewsRoute
   '/opportunities': typeof OpportunitiesRoute
+  '/parliament-tracker': typeof ParliamentTrackerRoute
   '/positioning': typeof PositioningRoute
   '/post-analytics': typeof PostAnalyticsRoute
+  '/recommendation-letters': typeof RecommendationLettersRoute
   '/recommendations': typeof RecommendationsRoute
   '/reports': typeof ReportsRoute
   '/sentiment': typeof SentimentRoute
+  '/settings-team': typeof SettingsTeamRoute
+  '/stakeholder-crm': typeof StakeholderCrmRoute
+  '/visitors': typeof VisitorsRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
-  '/accounts': typeof AccountsRoute
+  '/briefings-speeches': typeof BriefingsSpeechesRoute
+  '/calendar': typeof CalendarRoute
+  '/daily-briefing': typeof DailyBriefingRoute
+  '/funds-projects': typeof FundsProjectsRoute
+  '/grievances': typeof GrievancesRoute
   '/issue-radar': typeof IssueRadarRoute
   '/media-watch': typeof MediaWatchRoute
-  '/news': typeof NewsRoute
   '/opportunities': typeof OpportunitiesRoute
+  '/parliament-tracker': typeof ParliamentTrackerRoute
   '/positioning': typeof PositioningRoute
   '/post-analytics': typeof PostAnalyticsRoute
+  '/recommendation-letters': typeof RecommendationLettersRoute
   '/recommendations': typeof RecommendationsRoute
   '/reports': typeof ReportsRoute
   '/sentiment': typeof SentimentRoute
+  '/settings-team': typeof SettingsTeamRoute
+  '/stakeholder-crm': typeof StakeholderCrmRoute
+  '/visitors': typeof VisitorsRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
-  '/accounts': typeof AccountsRoute
+  '/briefings-speeches': typeof BriefingsSpeechesRoute
+  '/calendar': typeof CalendarRoute
+  '/daily-briefing': typeof DailyBriefingRoute
+  '/funds-projects': typeof FundsProjectsRoute
+  '/grievances': typeof GrievancesRoute
   '/issue-radar': typeof IssueRadarRoute
   '/media-watch': typeof MediaWatchRoute
-  '/news': typeof NewsRoute
   '/opportunities': typeof OpportunitiesRoute
+  '/parliament-tracker': typeof ParliamentTrackerRoute
   '/positioning': typeof PositioningRoute
   '/post-analytics': typeof PostAnalyticsRoute
+  '/recommendation-letters': typeof RecommendationLettersRoute
   '/recommendations': typeof RecommendationsRoute
   '/reports': typeof ReportsRoute
   '/sentiment': typeof SentimentRoute
+  '/settings-team': typeof SettingsTeamRoute
+  '/stakeholder-crm': typeof StakeholderCrmRoute
+  '/visitors': typeof VisitorsRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
   fullPaths:
     | '/'
-    | '/accounts'
+    | '/briefings-speeches'
+    | '/calendar'
+    | '/daily-briefing'
+    | '/funds-projects'
+    | '/grievances'
     | '/issue-radar'
     | '/media-watch'
-    | '/news'
     | '/opportunities'
+    | '/parliament-tracker'
     | '/positioning'
     | '/post-analytics'
+    | '/recommendation-letters'
     | '/recommendations'
     | '/reports'
     | '/sentiment'
+    | '/settings-team'
+    | '/stakeholder-crm'
+    | '/visitors'
   fileRoutesByTo: FileRoutesByTo
   to:
     | '/'
-    | '/accounts'
+    | '/briefings-speeches'
+    | '/calendar'
+    | '/daily-briefing'
+    | '/funds-projects'
+    | '/grievances'
     | '/issue-radar'
     | '/media-watch'
-    | '/news'
     | '/opportunities'
+    | '/parliament-tracker'
     | '/positioning'
     | '/post-analytics'
+    | '/recommendation-letters'
     | '/recommendations'
     | '/reports'
     | '/sentiment'
+    | '/settings-team'
+    | '/stakeholder-crm'
+    | '/visitors'
   id:
     | '__root__'
     | '/'
-    | '/accounts'
+    | '/briefings-speeches'
+    | '/calendar'
+    | '/daily-briefing'
+    | '/funds-projects'
+    | '/grievances'
     | '/issue-radar'
     | '/media-watch'
-    | '/news'
     | '/opportunities'
+    | '/parliament-tracker'
     | '/positioning'
     | '/post-analytics'
+    | '/recommendation-letters'
     | '/recommendations'
     | '/reports'
     | '/sentiment'
+    | '/settings-team'
+    | '/stakeholder-crm'
+    | '/visitors'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
-  AccountsRoute: typeof AccountsRoute
+  BriefingsSpeechesRoute: typeof BriefingsSpeechesRoute
+  CalendarRoute: typeof CalendarRoute
+  DailyBriefingRoute: typeof DailyBriefingRoute
+  FundsProjectsRoute: typeof FundsProjectsRoute
+  GrievancesRoute: typeof GrievancesRoute
   IssueRadarRoute: typeof IssueRadarRoute
   MediaWatchRoute: typeof MediaWatchRoute
-  NewsRoute: typeof NewsRoute
   OpportunitiesRoute: typeof OpportunitiesRoute
+  ParliamentTrackerRoute: typeof ParliamentTrackerRoute
   PositioningRoute: typeof PositioningRoute
   PostAnalyticsRoute: typeof PostAnalyticsRoute
+  RecommendationLettersRoute: typeof RecommendationLettersRoute
   RecommendationsRoute: typeof RecommendationsRoute
   ReportsRoute: typeof ReportsRoute
   SentimentRoute: typeof SentimentRoute
+  SettingsTeamRoute: typeof SettingsTeamRoute
+  StakeholderCrmRoute: typeof StakeholderCrmRoute
+  VisitorsRoute: typeof VisitorsRoute
 }
 
 declare module '@tanstack/react-router' {
   interface FileRoutesByPath {
+    '/visitors': {
+      id: '/visitors'
+      path: '/visitors'
+      fullPath: '/visitors'
+      preLoaderRoute: typeof VisitorsRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/stakeholder-crm': {
+      id: '/stakeholder-crm'
+      path: '/stakeholder-crm'
+      fullPath: '/stakeholder-crm'
+      preLoaderRoute: typeof StakeholderCrmRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/settings-team': {
+      id: '/settings-team'
+      path: '/settings-team'
+      fullPath: '/settings-team'
+      preLoaderRoute: typeof SettingsTeamRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/sentiment': {
       id: '/sentiment'
       path: '/sentiment'
@@ -196,6 +321,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof RecommendationsRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/recommendation-letters': {
+      id: '/recommendation-letters'
+      path: '/recommendation-letters'
+      fullPath: '/recommendation-letters'
+      preLoaderRoute: typeof RecommendationLettersRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/post-analytics': {
       id: '/post-analytics'
       path: '/post-analytics'
@@ -210,18 +342,18 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof PositioningRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/parliament-tracker': {
+      id: '/parliament-tracker'
+      path: '/parliament-tracker'
+      fullPath: '/parliament-tracker'
+      preLoaderRoute: typeof ParliamentTrackerRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/opportunities': {
       id: '/opportunities'
       path: '/opportunities'
       fullPath: '/opportunities'
       preLoaderRoute: typeof OpportunitiesRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/news': {
-      id: '/news'
-      path: '/news'
-      fullPath: '/news'
-      preLoaderRoute: typeof NewsRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/media-watch': {
@@ -238,11 +370,39 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof IssueRadarRouteImport
       parentRoute: typeof rootRouteImport
     }
-    '/accounts': {
-      id: '/accounts'
-      path: '/accounts'
-      fullPath: '/accounts'
-      preLoaderRoute: typeof AccountsRouteImport
+    '/grievances': {
+      id: '/grievances'
+      path: '/grievances'
+      fullPath: '/grievances'
+      preLoaderRoute: typeof GrievancesRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/funds-projects': {
+      id: '/funds-projects'
+      path: '/funds-projects'
+      fullPath: '/funds-projects'
+      preLoaderRoute: typeof FundsProjectsRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/daily-briefing': {
+      id: '/daily-briefing'
+      path: '/daily-briefing'
+      fullPath: '/daily-briefing'
+      preLoaderRoute: typeof DailyBriefingRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/calendar': {
+      id: '/calendar'
+      path: '/calendar'
+      fullPath: '/calendar'
+      preLoaderRoute: typeof CalendarRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/briefings-speeches': {
+      id: '/briefings-speeches'
+      path: '/briefings-speeches'
+      fullPath: '/briefings-speeches'
+      preLoaderRoute: typeof BriefingsSpeechesRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/': {
@@ -257,16 +417,24 @@ declare module '@tanstack/react-router' {
 
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
-  AccountsRoute: AccountsRoute,
+  BriefingsSpeechesRoute: BriefingsSpeechesRoute,
+  CalendarRoute: CalendarRoute,
+  DailyBriefingRoute: DailyBriefingRoute,
+  FundsProjectsRoute: FundsProjectsRoute,
+  GrievancesRoute: GrievancesRoute,
   IssueRadarRoute: IssueRadarRoute,
   MediaWatchRoute: MediaWatchRoute,
-  NewsRoute: NewsRoute,
   OpportunitiesRoute: OpportunitiesRoute,
+  ParliamentTrackerRoute: ParliamentTrackerRoute,
   PositioningRoute: PositioningRoute,
   PostAnalyticsRoute: PostAnalyticsRoute,
+  RecommendationLettersRoute: RecommendationLettersRoute,
   RecommendationsRoute: RecommendationsRoute,
   ReportsRoute: ReportsRoute,
   SentimentRoute: SentimentRoute,
+  SettingsTeamRoute: SettingsTeamRoute,
+  StakeholderCrmRoute: StakeholderCrmRoute,
+  VisitorsRoute: VisitorsRoute,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)
