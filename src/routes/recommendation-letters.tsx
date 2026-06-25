@@ -35,7 +35,7 @@ const TEMPLATES: Record<string, { title: string; body: (f: any) => string; autho
   },
   "introduction": {
     title: "Introduction Letter",
-    authority: f => f.authority || "[Addressed Authority]",
+    authority: ((f: any) => f.authority || "[Addressed Authority]") as any,
     body: (f) => `Dear Sir/Madam,\n\nI take pleasure in introducing ${f.recipient || "[Recipient Name]"}, who wishes to meet you regarding ${f.purpose || "[Subject]"}. Kindly extend the necessary courtesies.\n\nRegards,`,
   } as any,
   "general": {
