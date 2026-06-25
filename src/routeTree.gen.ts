@@ -20,7 +20,6 @@ import { Route as PostAnalyticsRouteImport } from './routes/post-analytics'
 import { Route as PositioningRouteImport } from './routes/positioning'
 import { Route as ParliamentTrackerRouteImport } from './routes/parliament-tracker'
 import { Route as OpportunitiesRouteImport } from './routes/opportunities'
-import { Route as NewsRouteImport } from './routes/news'
 import { Route as MediaWatchRouteImport } from './routes/media-watch'
 import { Route as IssueRadarRouteImport } from './routes/issue-radar'
 import { Route as GrievancesRouteImport } from './routes/grievances'
@@ -28,7 +27,6 @@ import { Route as FundsProjectsRouteImport } from './routes/funds-projects'
 import { Route as DailyBriefingRouteImport } from './routes/daily-briefing'
 import { Route as CalendarRouteImport } from './routes/calendar'
 import { Route as BriefingsSpeechesRouteImport } from './routes/briefings-speeches'
-import { Route as AccountsRouteImport } from './routes/accounts'
 import { Route as IndexRouteImport } from './routes/index'
 
 const VisitorsRoute = VisitorsRouteImport.update({
@@ -86,11 +84,6 @@ const OpportunitiesRoute = OpportunitiesRouteImport.update({
   path: '/opportunities',
   getParentRoute: () => rootRouteImport,
 } as any)
-const NewsRoute = NewsRouteImport.update({
-  id: '/news',
-  path: '/news',
-  getParentRoute: () => rootRouteImport,
-} as any)
 const MediaWatchRoute = MediaWatchRouteImport.update({
   id: '/media-watch',
   path: '/media-watch',
@@ -126,11 +119,6 @@ const BriefingsSpeechesRoute = BriefingsSpeechesRouteImport.update({
   path: '/briefings-speeches',
   getParentRoute: () => rootRouteImport,
 } as any)
-const AccountsRoute = AccountsRouteImport.update({
-  id: '/accounts',
-  path: '/accounts',
-  getParentRoute: () => rootRouteImport,
-} as any)
 const IndexRoute = IndexRouteImport.update({
   id: '/',
   path: '/',
@@ -139,7 +127,6 @@ const IndexRoute = IndexRouteImport.update({
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
-  '/accounts': typeof AccountsRoute
   '/briefings-speeches': typeof BriefingsSpeechesRoute
   '/calendar': typeof CalendarRoute
   '/daily-briefing': typeof DailyBriefingRoute
@@ -147,7 +134,6 @@ export interface FileRoutesByFullPath {
   '/grievances': typeof GrievancesRoute
   '/issue-radar': typeof IssueRadarRoute
   '/media-watch': typeof MediaWatchRoute
-  '/news': typeof NewsRoute
   '/opportunities': typeof OpportunitiesRoute
   '/parliament-tracker': typeof ParliamentTrackerRoute
   '/positioning': typeof PositioningRoute
@@ -162,7 +148,6 @@ export interface FileRoutesByFullPath {
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
-  '/accounts': typeof AccountsRoute
   '/briefings-speeches': typeof BriefingsSpeechesRoute
   '/calendar': typeof CalendarRoute
   '/daily-briefing': typeof DailyBriefingRoute
@@ -170,7 +155,6 @@ export interface FileRoutesByTo {
   '/grievances': typeof GrievancesRoute
   '/issue-radar': typeof IssueRadarRoute
   '/media-watch': typeof MediaWatchRoute
-  '/news': typeof NewsRoute
   '/opportunities': typeof OpportunitiesRoute
   '/parliament-tracker': typeof ParliamentTrackerRoute
   '/positioning': typeof PositioningRoute
@@ -186,7 +170,6 @@ export interface FileRoutesByTo {
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
-  '/accounts': typeof AccountsRoute
   '/briefings-speeches': typeof BriefingsSpeechesRoute
   '/calendar': typeof CalendarRoute
   '/daily-briefing': typeof DailyBriefingRoute
@@ -194,7 +177,6 @@ export interface FileRoutesById {
   '/grievances': typeof GrievancesRoute
   '/issue-radar': typeof IssueRadarRoute
   '/media-watch': typeof MediaWatchRoute
-  '/news': typeof NewsRoute
   '/opportunities': typeof OpportunitiesRoute
   '/parliament-tracker': typeof ParliamentTrackerRoute
   '/positioning': typeof PositioningRoute
@@ -211,7 +193,6 @@ export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
   fullPaths:
     | '/'
-    | '/accounts'
     | '/briefings-speeches'
     | '/calendar'
     | '/daily-briefing'
@@ -219,7 +200,6 @@ export interface FileRouteTypes {
     | '/grievances'
     | '/issue-radar'
     | '/media-watch'
-    | '/news'
     | '/opportunities'
     | '/parliament-tracker'
     | '/positioning'
@@ -234,7 +214,6 @@ export interface FileRouteTypes {
   fileRoutesByTo: FileRoutesByTo
   to:
     | '/'
-    | '/accounts'
     | '/briefings-speeches'
     | '/calendar'
     | '/daily-briefing'
@@ -242,7 +221,6 @@ export interface FileRouteTypes {
     | '/grievances'
     | '/issue-radar'
     | '/media-watch'
-    | '/news'
     | '/opportunities'
     | '/parliament-tracker'
     | '/positioning'
@@ -257,7 +235,6 @@ export interface FileRouteTypes {
   id:
     | '__root__'
     | '/'
-    | '/accounts'
     | '/briefings-speeches'
     | '/calendar'
     | '/daily-briefing'
@@ -265,7 +242,6 @@ export interface FileRouteTypes {
     | '/grievances'
     | '/issue-radar'
     | '/media-watch'
-    | '/news'
     | '/opportunities'
     | '/parliament-tracker'
     | '/positioning'
@@ -281,7 +257,6 @@ export interface FileRouteTypes {
 }
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
-  AccountsRoute: typeof AccountsRoute
   BriefingsSpeechesRoute: typeof BriefingsSpeechesRoute
   CalendarRoute: typeof CalendarRoute
   DailyBriefingRoute: typeof DailyBriefingRoute
@@ -289,7 +264,6 @@ export interface RootRouteChildren {
   GrievancesRoute: typeof GrievancesRoute
   IssueRadarRoute: typeof IssueRadarRoute
   MediaWatchRoute: typeof MediaWatchRoute
-  NewsRoute: typeof NewsRoute
   OpportunitiesRoute: typeof OpportunitiesRoute
   ParliamentTrackerRoute: typeof ParliamentTrackerRoute
   PositioningRoute: typeof PositioningRoute
@@ -382,13 +356,6 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof OpportunitiesRouteImport
       parentRoute: typeof rootRouteImport
     }
-    '/news': {
-      id: '/news'
-      path: '/news'
-      fullPath: '/news'
-      preLoaderRoute: typeof NewsRouteImport
-      parentRoute: typeof rootRouteImport
-    }
     '/media-watch': {
       id: '/media-watch'
       path: '/media-watch'
@@ -438,13 +405,6 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof BriefingsSpeechesRouteImport
       parentRoute: typeof rootRouteImport
     }
-    '/accounts': {
-      id: '/accounts'
-      path: '/accounts'
-      fullPath: '/accounts'
-      preLoaderRoute: typeof AccountsRouteImport
-      parentRoute: typeof rootRouteImport
-    }
     '/': {
       id: '/'
       path: '/'
@@ -457,7 +417,6 @@ declare module '@tanstack/react-router' {
 
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
-  AccountsRoute: AccountsRoute,
   BriefingsSpeechesRoute: BriefingsSpeechesRoute,
   CalendarRoute: CalendarRoute,
   DailyBriefingRoute: DailyBriefingRoute,
@@ -465,7 +424,6 @@ const rootRouteChildren: RootRouteChildren = {
   GrievancesRoute: GrievancesRoute,
   IssueRadarRoute: IssueRadarRoute,
   MediaWatchRoute: MediaWatchRoute,
-  NewsRoute: NewsRoute,
   OpportunitiesRoute: OpportunitiesRoute,
   ParliamentTrackerRoute: ParliamentTrackerRoute,
   PositioningRoute: PositioningRoute,
