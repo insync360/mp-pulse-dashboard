@@ -27,6 +27,7 @@ import { Route as FundsProjectsRouteImport } from './routes/funds-projects'
 import { Route as DailyBriefingRouteImport } from './routes/daily-briefing'
 import { Route as CitizenDatabaseRouteImport } from './routes/citizen-database'
 import { Route as CalendarRouteImport } from './routes/calendar'
+import { Route as BroadcastsRouteImport } from './routes/broadcasts'
 import { Route as BriefingsSpeechesRouteImport } from './routes/briefings-speeches'
 import { Route as IndexRouteImport } from './routes/index'
 
@@ -120,6 +121,11 @@ const CalendarRoute = CalendarRouteImport.update({
   path: '/calendar',
   getParentRoute: () => rootRouteImport,
 } as any)
+const BroadcastsRoute = BroadcastsRouteImport.update({
+  id: '/broadcasts',
+  path: '/broadcasts',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const BriefingsSpeechesRoute = BriefingsSpeechesRouteImport.update({
   id: '/briefings-speeches',
   path: '/briefings-speeches',
@@ -134,6 +140,7 @@ const IndexRoute = IndexRouteImport.update({
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
   '/briefings-speeches': typeof BriefingsSpeechesRoute
+  '/broadcasts': typeof BroadcastsRoute
   '/calendar': typeof CalendarRoute
   '/citizen-database': typeof CitizenDatabaseRoute
   '/daily-briefing': typeof DailyBriefingRoute
@@ -156,6 +163,7 @@ export interface FileRoutesByFullPath {
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
   '/briefings-speeches': typeof BriefingsSpeechesRoute
+  '/broadcasts': typeof BroadcastsRoute
   '/calendar': typeof CalendarRoute
   '/citizen-database': typeof CitizenDatabaseRoute
   '/daily-briefing': typeof DailyBriefingRoute
@@ -179,6 +187,7 @@ export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
   '/briefings-speeches': typeof BriefingsSpeechesRoute
+  '/broadcasts': typeof BroadcastsRoute
   '/calendar': typeof CalendarRoute
   '/citizen-database': typeof CitizenDatabaseRoute
   '/daily-briefing': typeof DailyBriefingRoute
@@ -203,6 +212,7 @@ export interface FileRouteTypes {
   fullPaths:
     | '/'
     | '/briefings-speeches'
+    | '/broadcasts'
     | '/calendar'
     | '/citizen-database'
     | '/daily-briefing'
@@ -225,6 +235,7 @@ export interface FileRouteTypes {
   to:
     | '/'
     | '/briefings-speeches'
+    | '/broadcasts'
     | '/calendar'
     | '/citizen-database'
     | '/daily-briefing'
@@ -247,6 +258,7 @@ export interface FileRouteTypes {
     | '__root__'
     | '/'
     | '/briefings-speeches'
+    | '/broadcasts'
     | '/calendar'
     | '/citizen-database'
     | '/daily-briefing'
@@ -270,6 +282,7 @@ export interface FileRouteTypes {
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
   BriefingsSpeechesRoute: typeof BriefingsSpeechesRoute
+  BroadcastsRoute: typeof BroadcastsRoute
   CalendarRoute: typeof CalendarRoute
   CitizenDatabaseRoute: typeof CitizenDatabaseRoute
   DailyBriefingRoute: typeof DailyBriefingRoute
@@ -418,6 +431,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof CalendarRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/broadcasts': {
+      id: '/broadcasts'
+      path: '/broadcasts'
+      fullPath: '/broadcasts'
+      preLoaderRoute: typeof BroadcastsRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/briefings-speeches': {
       id: '/briefings-speeches'
       path: '/briefings-speeches'
@@ -438,6 +458,7 @@ declare module '@tanstack/react-router' {
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
   BriefingsSpeechesRoute: BriefingsSpeechesRoute,
+  BroadcastsRoute: BroadcastsRoute,
   CalendarRoute: CalendarRoute,
   CitizenDatabaseRoute: CitizenDatabaseRoute,
   DailyBriefingRoute: DailyBriefingRoute,
