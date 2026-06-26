@@ -90,6 +90,13 @@ const sections: NavSection[] = [
     ],
   },
   {
+    label: "Outreach",
+    items: [
+      { title: "Citizen Database", url: "/citizen-database", icon: Database },
+      { title: "Broadcasts", url: "/broadcasts", icon: Send },
+    ],
+  },
+  {
     label: "System",
     items: [
       { title: "Reports", url: "/reports", icon: FileText },
