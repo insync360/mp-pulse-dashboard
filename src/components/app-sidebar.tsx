@@ -18,6 +18,8 @@ import {
   Building2,
   FileText,
   Settings,
+  Database,
+  Send,
 } from "lucide-react";
 import type { LucideIcon } from "lucide-react";
 import {
