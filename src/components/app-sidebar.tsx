@@ -18,6 +18,8 @@ import {
   Building2,
   FileText,
   Settings,
+  Database,
+  Send,
 } from "lucide-react";
 import type { LucideIcon } from "lucide-react";
 import {
@@ -85,6 +87,13 @@ const sections: NavSection[] = [
     items: [
       { title: "Funds & Projects", url: "/funds-projects", icon: Landmark },
       { title: "Parliament Tracker", url: "/parliament-tracker", icon: Building2 },
+    ],
+  },
+  {
+    label: "Outreach",
+    items: [
+      { title: "Citizen Database", url: "/citizen-database", icon: Database },
+      { title: "Broadcasts", url: "/broadcasts", icon: Send },
     ],
   },
   {
