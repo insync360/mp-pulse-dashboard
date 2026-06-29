@@ -2,7 +2,7 @@ import { createFileRoute, Link, useNavigate } from "@tanstack/react-router";
 import { useMemo, useState } from "react";
 import {
   Search, Phone, Mail, X, FileSignature, Star, ArrowRightLeft, Calendar, Building2,
-  ClipboardList, Folder,
+  ClipboardList, Folder, Plus,
 } from "lucide-react";
 import { Card, CardContent } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
@@ -10,8 +10,9 @@ import { Badge } from "@/components/ui/badge";
 import { Input } from "@/components/ui/input";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Sheet, SheetContent, SheetHeader, SheetTitle } from "@/components/ui/sheet";
+import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogFooter } from "@/components/ui/dialog";
 import { useData } from "@/data/store";
-import type { Officer } from "@/data/types";
+import type { Officer, Ward } from "@/data/types";
 import { formatDate } from "@/data/selectors";
 import { toast } from "sonner";
 
