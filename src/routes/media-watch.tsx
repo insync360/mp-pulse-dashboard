@@ -515,7 +515,12 @@ function MediaWatchPage() {
             </div>
           </Card>
         </TabsContent>
+
+        <TabsContent value="press" className="mt-4 space-y-4">
+          <PressDeskPanel />
+        </TabsContent>
       </Tabs>
+
 
       {/* Draft Modal */}
       <Dialog open={!!draftFor} onOpenChange={(o) => !o && setDraftFor(null)}>
