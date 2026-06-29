@@ -552,3 +552,125 @@ function MediaWatchPage() {
     </div>
   );
 }
+
+// ─────────── Press Desk ───────────
+
+type PressContact = { name: string; outlet: string; beat: string; phone: string; relationship: "Warm" | "Steady" | "Cold"; lastTouch: string };
+const PRESS_CONTACTS: PressContact[] = [
+  { name: "A. Prakash", outlet: "Prajavani", beat: "Politics — Bengaluru East", phone: "+91 98800 77881", relationship: "Warm", lastTouch: "4 d" },
+  { name: "R. Iyer", outlet: "Deccan Herald", beat: "Civic / BBMP", phone: "+91 98452 33001", relationship: "Steady", lastTouch: "12 d" },
+  { name: "S. Murthy", outlet: "Times of India", beat: "Infrastructure", phone: "+91 98452 99110", relationship: "Steady", lastTouch: "8 d" },
+  { name: "Anjali Pinto", outlet: "The Hindu", beat: "Policy & Parliament", phone: "+91 98860 21134", relationship: "Warm", lastTouch: "2 d" },
+  { name: "K. Hegde", outlet: "Vijaya Karnataka", beat: "State politics", phone: "+91 99004 19087", relationship: "Cold", lastTouch: "42 d" },
+  { name: "Rohit Kumar", outlet: "TV9 Kannada", beat: "Breaking / city", phone: "+91 99000 33491", relationship: "Steady", lastTouch: "6 d" },
+];
+
+type PressQuery = {
+  id: string; journalist: string; outlet: string; topic: string; deadline: string;
+  sensitivity: "Low" | "Medium" | "High"; status: "Incoming" | "Drafting" | "Awaiting MP" | "Approved" | "Sent";
+  draft?: string; approvedQuote?: string;
+};
+const PRESS_QUERIES: PressQuery[] = [
+  { id: "PQ-041", journalist: "R. Iyer", outlet: "Deccan Herald", topic: "MP's position on Mahadayi water sharing in Belagavi belt", deadline: "Today 18:00", sensitivity: "High", status: "Awaiting MP", draft: "On Mahadayi, our position is clear: every drop allocated by the tribunal must reach Karnataka farmers without delay. I am writing to the Union Jal Shakti Minister this week seeking a status update on the project DPRs and intend to raise the matter in Parliament next session." },
+  { id: "PQ-040", journalist: "S. Murthy", outlet: "Times of India", topic: "ORR last-mile shuttle progress", deadline: "Tomorrow 11:00", sensitivity: "Medium", status: "Drafting" },
+  { id: "PQ-039", journalist: "Anjali Pinto", outlet: "The Hindu", topic: "Citizen Pulse — case management approach", deadline: "Fri 14:00", sensitivity: "Low", status: "Approved", approvedQuote: "Every grievance gets a ticket, an owner, and a deadline. That's the bare minimum citizens deserve." },
+  { id: "PQ-038", journalist: "Rohit Kumar", outlet: "TV9 Kannada", topic: "Hebbal flyover potholes", deadline: "Today 20:00", sensitivity: "Medium", status: "Sent" },
+  { id: "PQ-037", journalist: "K. Hegde", outlet: "Vijaya Karnataka", topic: "Kannada in tech-park signage", deadline: "Mon 10:00", sensitivity: "Medium", status: "Incoming" },
+];
+
+const sensTone: Record<PressQuery["sensitivity"], string> = {
+  Low: "bg-emerald-50 text-emerald-700 border-emerald-200",
+  Medium: "bg-amber-50 text-amber-800 border-amber-200",
+  High: "bg-red-50 text-red-700 border-red-200",
+};
+const statusTone: Record<PressQuery["status"], string> = {
+  Incoming: "bg-slate-100 text-slate-700 border-slate-200",
+  Drafting: "bg-blue-50 text-blue-700 border-blue-200",
+  "Awaiting MP": "bg-saffron/15 text-saffron border-saffron/40",
+  Approved: "bg-emerald-50 text-emerald-700 border-emerald-200",
+  Sent: "bg-navy/5 text-navy border-navy/20",
+};
+
+function PressDeskPanel() {
+  return (
+    <div className="grid grid-cols-1 lg:grid-cols-3 gap-4">
+      <div className="lg:col-span-2 space-y-3">
+        <Card className="p-4">
+          <h3 className="text-sm font-semibold text-navy mb-3">Incoming press queries</h3>
+          <div className="space-y-3">
+            {PRESS_QUERIES.map(q => (
+              <div key={q.id} className="rounded-lg border p-3">
+                <div className="flex items-center gap-2 flex-wrap text-xs">
+                  <span className="font-semibold text-navy">{q.journalist}</span>
+                  <span className="text-slate-500">· {q.outlet}</span>
+                  <Badge variant="outline" className={sensTone[q.sensitivity]}>{q.sensitivity} sensitivity</Badge>
+                  <Badge variant="outline" className={statusTone[q.status]}>{q.status}</Badge>
+                  <span className="ml-auto text-slate-500">Deadline: <span className="font-medium text-navy">{q.deadline}</span></span>
+                </div>
+                <div className="text-sm text-slate-900 mt-1.5 font-medium">{q.topic}</div>
+                {q.draft && (
+                  <div className="mt-2 rounded-md bg-slate-50 border border-slate-200 p-2.5 text-xs text-slate-700 leading-relaxed">
+                    <span className="text-[10px] uppercase tracking-wider text-slate-500">Draft response</span>
+                    <p className="mt-1">{q.draft}</p>
+                  </div>
+                )}
+                {q.approvedQuote && (
+                  <div className="mt-2 rounded-md bg-emerald-50 border border-emerald-200 p-2.5 text-xs text-emerald-900 leading-relaxed">
+                    <span className="text-[10px] uppercase tracking-wider text-emerald-700">✓ Approved quote</span>
+                    <p className="mt-1 italic">"{q.approvedQuote}"</p>
+                  </div>
+                )}
+                <div className="mt-2 flex flex-wrap gap-1.5">
+                  {q.status === "Incoming" && <Button size="sm" className="h-7 text-xs bg-navy text-white hover:bg-navy/90">Draft response</Button>}
+                  {q.status === "Drafting" && <Button size="sm" className="h-7 text-xs bg-saffron text-navy hover:bg-saffron/90">Send to MP</Button>}
+                  {q.status === "Awaiting MP" && <Button size="sm" className="h-7 text-xs bg-emerald-600 hover:bg-emerald-700 text-white">Approve quote</Button>}
+                  {q.status === "Approved" && <Button size="sm" className="h-7 text-xs bg-navy text-white hover:bg-navy/90">Send to journalist</Button>}
+                  <Button size="sm" variant="outline" className="h-7 text-xs">Log coverage</Button>
+                  <Button size="sm" variant="outline" className="h-7 text-xs">Follow-up note</Button>
+                </div>
+              </div>
+            ))}
+          </div>
+        </Card>
+
+        <Card className="p-4">
+          <h3 className="text-sm font-semibold text-navy mb-3">Press note workflow</h3>
+          <div className="grid grid-cols-4 gap-2 text-xs">
+            {["Draft", "MP review", "Approved quote", "Released + tracked"].map((s, i) => (
+              <div key={s} className={`rounded-md border p-2.5 text-center ${i === 1 ? "bg-saffron/10 border-saffron/40 text-saffron font-semibold" : "bg-slate-50 border-slate-200 text-slate-600"}`}>
+                <div className="text-[10px] uppercase tracking-wider">Stage {i + 1}</div>
+                <div className="mt-0.5">{s}</div>
+              </div>
+            ))}
+          </div>
+          <div className="mt-3 text-[11px] text-slate-500 flex items-center gap-1.5">
+            <Shield className="h-3 w-3 text-saffron" /> Every quote requires explicit MP approval before release.
+          </div>
+        </Card>
+      </div>
+
+      <Card className="p-4">
+        <h3 className="text-sm font-semibold text-navy mb-3">Media contacts</h3>
+        <div className="space-y-2.5">
+          {PRESS_CONTACTS.map(c => (
+            <div key={c.name} className="rounded-md border p-2.5">
+              <div className="flex items-center justify-between gap-2">
+                <div>
+                  <div className="font-medium text-navy text-sm">{c.name}</div>
+                  <div className="text-[11px] text-slate-500">{c.outlet} · {c.beat}</div>
+                </div>
+                <Badge variant="outline" className={
+                  c.relationship === "Warm" ? "bg-emerald-50 text-emerald-700 border-emerald-200 text-[10px]" :
+                  c.relationship === "Steady" ? "bg-blue-50 text-blue-700 border-blue-200 text-[10px]" :
+                  "bg-rose-50 text-rose-700 border-rose-200 text-[10px]"
+                }>{c.relationship}</Badge>
+              </div>
+              <div className="text-[10px] text-slate-400 mt-1.5">{c.phone} · last touch {c.lastTouch}</div>
+            </div>
+          ))}
+        </div>
+      </Card>
+    </div>
+  );
+}
+
