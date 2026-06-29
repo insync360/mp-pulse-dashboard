@@ -203,6 +203,48 @@ const templates: DataState["templates"] = [
   { id: "TPL-5", name: "Congratulations", recipientType: "Citizen", body: "Hearty congratulations…" },
 ];
 
+const attachments: DataState["attachments"] = [
+  { id: "ATT-1", name: "Lab report — KR Puram water sample.pdf", kind: "PDF", size: "412 KB", recordType: "Case", recordId: "CASE-2026-0418", uploadedBy: "Suresh Gowda", uploadedAt: d(-3), sensitive: false },
+  { id: "ATT-2", name: "Before — Hoodi pothole 14 Jun.jpg", kind: "Image", size: "1.4 MB", recordType: "Case", recordId: "CASE-2026-0417", uploadedBy: "Ravi Kumar", uploadedAt: d(-6) },
+  { id: "ATT-3", name: "Aadhaar — Geetha Sharma.pdf", kind: "PDF", size: "320 KB", recordType: "Citizen", recordId: "CTZ-6", uploadedBy: "Geetha Iyer", uploadedAt: d(-9), sensitive: true },
+  { id: "ATT-4", name: "Pension acknowledgement DSP-2410.pdf", kind: "PDF", size: "210 KB", recordType: "Letter", recordId: "LET-2026-012", uploadedBy: "Kavya Hegde", uploadedAt: d(-7) },
+  { id: "ATT-5", name: "Inspection note — BBMP SWD.pdf", kind: "PDF", size: "640 KB", recordType: "DeptFile", recordId: "FIL-9", uploadedBy: "Lakshmi Rao", uploadedAt: d(-1), expiryNote: "Reply window 9 d" },
+  { id: "ATT-6", name: "Before — Bellandur Lake bund.jpg", kind: "Image", size: "2.1 MB", recordType: "Project", recordId: "PRJ-2", uploadedBy: "Field Vol.", uploadedAt: d(-30) },
+  { id: "ATT-7", name: "During — Bellandur Lake dredging.jpg", kind: "Image", size: "1.8 MB", recordType: "Project", recordId: "PRJ-2", uploadedBy: "Field Vol.", uploadedAt: d(-10) },
+  { id: "ATT-8", name: "After — Hoodi pothole patched.jpg", kind: "Image", size: "1.2 MB", recordType: "Case", recordId: "CASE-2026-0417", uploadedBy: "Ravi Kumar", uploadedAt: d(-1) },
+  { id: "ATT-9", name: "Petition — Cauvery line 412 sigs.pdf", kind: "PDF", size: "3.8 MB", recordType: "Demand", recordId: "DEM-2", uploadedBy: "Suresh Gowda", uploadedAt: d(-20) },
+  { id: "ATT-10", name: "Closure proof — Whitefield Kannada teacher.jpg", kind: "Image", size: "900 KB", recordType: "Commitment", recordId: "COM-006", uploadedBy: "Kavya Hegde", uploadedAt: d(-2) },
+  { id: "ATT-11", name: "Event brief — RWA Town Hall.docx", kind: "DOCX", size: "84 KB", recordType: "Event", recordId: "EVT-1", uploadedBy: "Harish Bhat", uploadedAt: d(-1) },
+  { id: "ATT-12", name: "Khata extract — Venkatesh M.pdf", kind: "PDF", size: "510 KB", recordType: "Citizen", recordId: "CTZ-9", uploadedBy: "Lakshmi Rao", uploadedAt: d(-1) },
+  { id: "ATT-13", name: "Medical bills — Bhagya's father.pdf", kind: "PDF", size: "1.1 MB", recordType: "Case", recordId: "CASE-2026-0405", uploadedBy: "Deepa Shetty", uploadedAt: d(-6), sensitive: true },
+  { id: "ATT-14", name: "After — AECS water tanker dispatched.jpg", kind: "Image", size: "1.3 MB", recordType: "Case", recordId: "CASE-2026-0409", uploadedBy: "Field Vol.", uploadedAt: d(-2) },
+  { id: "ATT-15", name: "Memo — RWA Federation joint demand.pdf", kind: "PDF", size: "780 KB", recordType: "Organisation", recordId: "ORG-1", uploadedBy: "Harish Bhat", uploadedAt: d(-12) },
+];
+
+const tasks: DataState["tasks"] = [
+  { id: "TSK-1", title: "Call Smt. Lakshmi re: pension status", ownerId: "STF-12", recordType: "Case", recordId: "CASE-2026-0413", due: d(0), status: "Open", priority: "High" },
+  { id: "TSK-2", title: "Site visit — ITPL pothole closure", ownerId: "STF-3", recordType: "Case", recordId: "CASE-2026-0417", due: d(1), status: "In Progress", priority: "High" },
+  { id: "TSK-3", title: "Reminder letter to Tahsildar Murthy", ownerId: "STF-10", recordType: "Letter", recordId: "LET-2026-004", due: d(-1), status: "Overdue", priority: "High" },
+  { id: "TSK-4", title: "Prepare brief for RWA Town Hall", ownerId: "STF-9", recordType: "Event", recordId: "EVT-1", due: d(1), status: "In Progress", priority: "Medium" },
+  { id: "TSK-5", title: "Check AECS Layout water restored", ownerId: "STF-1", recordType: "Case", recordId: "CASE-2026-0409", due: d(0), status: "Open", priority: "High" },
+  { id: "TSK-6", title: "File MPLADS utilisation Q1", ownerId: "STF-9", recordType: "Project", recordId: "PRJ-1", due: d(3), status: "Open", priority: "Medium" },
+  { id: "TSK-7", title: "Closure call — Mr Krishnamurthy", ownerId: "STF-9", recordType: "Case", recordId: "CASE-2026-0408", due: d(-2), status: "Done", priority: "Low" },
+  { id: "TSK-8", title: "Photograph footpath at Marathahalli", ownerId: "STF-3", recordType: "Commitment", recordId: "COM-001", due: d(2), status: "Open", priority: "Medium" },
+  { id: "TSK-9", title: "Send condolence card — Sharma family", ownerId: "STF-10", recordType: "Citizen", recordId: "CTZ-6", due: d(-7), status: "Done", priority: "Low" },
+  { id: "TSK-10", title: "OCR & file petition signatures", ownerId: "STF-9", recordType: "Demand", recordId: "DEM-2", due: d(5), status: "Open", priority: "Low" },
+  { id: "TSK-11", title: "Confirm fogging schedule — BBMP", ownerId: "STF-6", recordType: "Case", recordId: "CASE-2026-0414", due: d(0), status: "In Progress", priority: "Medium" },
+  { id: "TSK-12", title: "Follow up khata file — sub-registrar", ownerId: "STF-8", recordType: "DeptFile", recordId: "FIL-9", due: d(-3), status: "Overdue", priority: "High" },
+];
+
+const inspections: DataState["inspections"] = [
+  { id: "INS-1", projectId: "PRJ-2", phase: "Before", date: d(-30), by: "Suresh Patil", gps: "12.9352, 77.6766", photoLabel: "Bund encroachment, NE corner" },
+  { id: "INS-2", projectId: "PRJ-2", phase: "During", date: d(-10), by: "Suresh Patil", gps: "12.9352, 77.6766", photoLabel: "Dredging machinery deployed" },
+  { id: "INS-3", projectId: "PRJ-4", phase: "Before", date: d(-60), by: "Mahesh Gowda", gps: "12.9897, 77.6925", photoLabel: "Old uncontrolled junction" },
+  { id: "INS-4", projectId: "PRJ-4", phase: "After", date: d(-2), by: "Mahesh Gowda", gps: "12.9897, 77.6925", photoLabel: "Signal commissioned 24 Jun" },
+  { id: "INS-5", projectId: "PRJ-1", phase: "Before", date: d(-25), by: "Suresh Gowda", gps: "13.0102, 77.7012", photoLabel: "KR Puram trunk line — old AC pipe" },
+  { id: "INS-6", projectId: "PRJ-3", phase: "During", date: d(-7), by: "Field Vol.", gps: "12.9698, 77.7500", photoLabel: "Whitefield Pkg A — base layer" },
+];
+
 export const seedData: DataState = {
   departments: [...departments],
   schemes,
@@ -219,4 +261,8 @@ export const seedData: DataState = {
   demands,
   projects,
   deptFiles,
+  attachments,
+  tasks,
+  inspections,
 };
+
