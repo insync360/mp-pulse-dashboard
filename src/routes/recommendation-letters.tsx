@@ -295,12 +295,41 @@ function riskMeta(r?: Template["riskClass"]) {
 }
 
 function LettersPage() {
+  const { consumeLetterDraft, addLetter } = useData();
   const [letters, setLetters] = useState<Letter[]>(SEED);
   const [pickerOpen, setPickerOpen] = useState(false);
-  const [composer, setComposer] = useState<{ tmpl: Template; letter?: Letter } | null>(null);
+  const [composer, setComposer] = useState<{ tmpl: Template; letter?: Letter; prefill?: LetterDraftPrefill } | null>(null);
   const [envelopeFor, setEnvelopeFor] = useState<Letter | null>(null);
   const [viewPdf, setViewPdf] = useState<Letter | null>(null);
   const [filter, setFilter] = useState({ q: "", category: "all", status: "all" });
+
+  // Consume any cross-page prefill (Case / Officer / Commitment → Letter)
+  const consumed = useRef(false);
+  useEffect(() => {
+    if (consumed.current) return;
+    const d = consumeLetterDraft();
+    if (!d) return;
+    consumed.current = true;
+    const tmpl = TEMPLATES.find((t) => t.id === d.templateId) || TEMPLATES.find((t) => t.id === "formal-req")!;
+    setComposer({
+      tmpl,
+      prefill: d,
+      letter: {
+        id: genRef(),
+        recipient: d.recipientName || tmpl.recipientType,
+        category: tmpl.category,
+        subject: d.subject || tmpl.subject,
+        linkedTo: d.linkedToLabel,
+        status: "Draft",
+        mode: "—",
+        date: new Date().toLocaleDateString("en-IN", { day: "2-digit", month: "short", year: "numeric" }),
+        templateId: tmpl.id,
+        fields: d.fields || {},
+      },
+    });
+    toast.success(`Letter pre-filled from ${d.linkedToLabel ?? "linked record"}`);
+  }, [consumeLetterDraft]);
+
 
   const counts = useMemo(() => ({
     drafts: letters.filter(l => l.status === "Draft").length + 7,
