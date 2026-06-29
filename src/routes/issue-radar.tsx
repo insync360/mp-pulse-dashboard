@@ -155,22 +155,11 @@ function IssueList({ data }: { data: Issue[] }) {
   );
 }
 
-function IssueRadarPage() {
+function SocialRadarTab() {
   const [tab, setTab] = useState("district");
   return (
-    <div className="space-y-6 p-6">
-      <div className="flex items-end justify-between">
-        <div>
-          <h1 className="text-2xl font-semibold tracking-tight text-foreground">Issue Radar</h1>
-          <p className="text-sm text-muted-foreground">
-            Trending issues and hashtags ranked by volume, momentum, and relevance to your constituency.
-          </p>
-        </div>
-        <div className="flex items-center gap-2 text-xs text-muted-foreground">
-          <span className="h-1.5 w-1.5 rounded-full bg-emerald-500 animate-pulse" />
-          Updated 2 min ago
-        </div>
-      </div>
+    <div className="space-y-6">
+
 
       <Tabs value={tab} onValueChange={setTab} className="space-y-4">
         <TabsList className="bg-muted">
