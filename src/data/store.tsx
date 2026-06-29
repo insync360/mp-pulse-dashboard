@@ -1,6 +1,6 @@
 import { createContext, useCallback, useContext, useMemo, useState, type ReactNode } from "react";
 import type {
-  Attachment, Case, Citizen, Commitment, DataState, Id, Letter,
+  Attachment, Case, Citizen, Commitment, DataState, Event as EventRec, Id, Letter,
   LetterDraftPrefill, Officer, Task,
 } from "./types";
 import { seedData } from "./seed";
@@ -13,7 +13,7 @@ interface DataApi extends DataState {
   getCommitment: (id: Id) => Commitment | undefined;
   // Mutations
   updateCase: (id: Id, patch: Partial<Case>) => void;
-  addCase: (c: Case) => void;
+  addCase: (c: Case) => Case;
   addLetter: (l: Letter) => Letter;
   updateLetter: (id: Id, patch: Partial<Letter>) => void;
   addCommitment: (c: Commitment) => Commitment;
@@ -21,6 +21,8 @@ interface DataApi extends DataState {
   addAttachment: (a: Attachment) => void;
   addTask: (t: Task) => Task;
   updateTask: (id: Id, patch: Partial<Task>) => void;
+  addOfficer: (o: Officer) => Officer;
+  addEvent: (e: EventRec) => EventRec;
   // Cross-page letter prefill
   letterDraft: LetterDraftPrefill | null;
   setLetterDraft: (d: LetterDraftPrefill | null) => void;
@@ -47,7 +49,7 @@ export function DataProvider({ children }: { children: ReactNode }) {
     getCommitment: (id) => state.commitments.find((c) => c.id === id),
     updateCase: (id, patch) =>
       setState((s) => ({ ...s, cases: s.cases.map((c) => (c.id === id ? { ...c, ...patch } : c)) })),
-    addCase: (c) => setState((s) => ({ ...s, cases: [c, ...s.cases] })),
+    addCase: (c) => { setState((s) => ({ ...s, cases: [c, ...s.cases] })); return c; },
     addLetter: (l) => {
       setState((s) => ({ ...s, letters: [l, ...s.letters] }));
       return l;
@@ -68,6 +70,8 @@ export function DataProvider({ children }: { children: ReactNode }) {
     },
     updateTask: (id, patch) =>
       setState((s) => ({ ...s, tasks: s.tasks.map((t) => (t.id === id ? { ...t, ...patch } : t)) })),
+    addOfficer: (o) => { setState((s) => ({ ...s, officers: [o, ...s.officers] })); return o; },
+    addEvent: (e) => { setState((s) => ({ ...s, events: [e, ...s.events] })); return e; },
     letterDraft,
     setLetterDraft,
     consumeLetterDraft,
