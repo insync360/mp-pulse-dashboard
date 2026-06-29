@@ -684,10 +684,11 @@ function EnvelopeDialog({ letter, onClose }: { letter: Letter; onClose: () => vo
           refNo={letter.id}
         />
         <div className="text-xs text-muted-foreground">Window-envelope friendly · address positioned for standard DL envelopes and Avery L7165 labels.</div>
-        <DialogFooter>
+        <div className="flex justify-end gap-2 mt-2">
           <Button variant="outline" onClick={onClose}>Close</Button>
           <Button className="bg-[#0A1F44] text-white" onClick={() => { toast.success("Sent to printer"); onClose(); }}><Printer className="h-4 w-4" /> Print Envelope</Button>
-        </DialogFooter>
+        </div>
+
       </DialogContent>
     </Dialog>
   );
