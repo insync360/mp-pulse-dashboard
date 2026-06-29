@@ -1,5 +1,6 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
 import { useState } from "react";
+import { useData } from "@/data/store";
 import { toast } from "sonner";
 import {
   Headphones,
