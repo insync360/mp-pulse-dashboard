@@ -1,6 +1,6 @@
 import { createContext, useCallback, useContext, useMemo, useState, type ReactNode } from "react";
 import type {
-  Attachment, Case, Citizen, Commitment, DataState, Id, Letter,
+  Attachment, Case, Citizen, Commitment, DataState, Event as EventRec, Id, Letter,
   LetterDraftPrefill, Officer, Task,
 } from "./types";
 import { seedData } from "./seed";
