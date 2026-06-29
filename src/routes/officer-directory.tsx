@@ -72,12 +72,46 @@ function OfficerDirectoryPage() {
 
   return (
     <div className="p-6 space-y-6 bg-slate-50 min-h-screen">
-      <div>
-        <h1 className="text-2xl font-bold text-navy">Officer Directory</h1>
-        <p className="text-sm text-muted-foreground">
-          Every official the MP office works with — wired to live case load, letters and pending files.
-        </p>
+      <div className="flex items-start justify-between gap-3 flex-wrap">
+        <div>
+          <h1 className="text-2xl font-bold text-navy">Officer Directory</h1>
+          <p className="text-sm text-muted-foreground">
+            Every official the MP office works with — wired to live case load, letters and pending files.
+          </p>
+        </div>
+        <Button className="bg-saffron hover:bg-saffron/90 text-navy" onClick={() => setAddOpen(true)}>
+          <Plus className="h-4 w-4" /> Add Officer
+        </Button>
       </div>
+
+      <Dialog open={addOpen} onOpenChange={setAddOpen}>
+        <DialogContent>
+          <DialogHeader><DialogTitle>Add Officer</DialogTitle></DialogHeader>
+          <div className="space-y-3">
+            <Input placeholder="Full name" value={draft.name} onChange={(e) => setDraft({ ...draft, name: e.target.value })} />
+            <Input placeholder="Designation (e.g. AEE)" value={draft.designation} onChange={(e) => setDraft({ ...draft, designation: e.target.value })} />
+            <div className="grid grid-cols-2 gap-3">
+              <Select value={draft.departmentId} onValueChange={(v) => setDraft({ ...draft, departmentId: v })}>
+                <SelectTrigger><SelectValue placeholder="Department" /></SelectTrigger>
+                <SelectContent>{departments.map((d) => <SelectItem key={d.id} value={d.id}>{d.short}</SelectItem>)}</SelectContent>
+              </Select>
+              <Select value={draft.jurisdiction as string} onValueChange={(v) => setDraft({ ...draft, jurisdiction: v as Ward | "Constituency" })}>
+                <SelectTrigger><SelectValue /></SelectTrigger>
+                <SelectContent>
+                  {["Whitefield","KR Puram","Mahadevapura","Marathahalli","Bellandur","Constituency"].map(j => <SelectItem key={j} value={j}>{j}</SelectItem>)}
+                </SelectContent>
+              </Select>
+            </div>
+            <Input placeholder="Phone" value={draft.phone} onChange={(e) => setDraft({ ...draft, phone: e.target.value })} />
+            <Input placeholder="Email" value={draft.email} onChange={(e) => setDraft({ ...draft, email: e.target.value })} />
+          </div>
+          <DialogFooter>
+            <Button variant="outline" onClick={() => setAddOpen(false)}>Cancel</Button>
+            <Button className="bg-navy text-white" onClick={saveOfficer}>Save Officer</Button>
+          </DialogFooter>
+        </DialogContent>
+      </Dialog>
+
 
       <Card>
         <CardContent className="p-4 flex flex-wrap items-center gap-3">
