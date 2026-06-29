@@ -9,10 +9,14 @@
 // Additionally, you should also exclude this file from your linter and/or formatter to prevent it from being checked or modified.
 
 import { Route as rootRouteImport } from './routes/__root'
+import { Route as WorkInspectionRouteImport } from './routes/work-inspection'
 import { Route as VisitorsRouteImport } from './routes/visitors'
+import { Route as UnifiedInboxRouteImport } from './routes/unified-inbox'
 import { Route as StakeholderCrmRouteImport } from './routes/stakeholder-crm'
+import { Route as StaffTasksRouteImport } from './routes/staff-tasks'
 import { Route as SettingsTeamRouteImport } from './routes/settings-team'
 import { Route as SentimentRouteImport } from './routes/sentiment'
+import { Route as SchemeAssistanceRouteImport } from './routes/scheme-assistance'
 import { Route as ReportsRouteImport } from './routes/reports'
 import { Route as RecommendationsRouteImport } from './routes/recommendations'
 import { Route as RecommendationLettersRouteImport } from './routes/recommendation-letters'
@@ -20,25 +24,52 @@ import { Route as PostAnalyticsRouteImport } from './routes/post-analytics'
 import { Route as PositioningRouteImport } from './routes/positioning'
 import { Route as ParliamentTrackerRouteImport } from './routes/parliament-tracker'
 import { Route as OpportunitiesRouteImport } from './routes/opportunities'
+import { Route as OfficerDirectoryRouteImport } from './routes/officer-directory'
 import { Route as MediaWatchRouteImport } from './routes/media-watch'
+import { Route as LocalBodyMeetingsRouteImport } from './routes/local-body-meetings'
+import { Route as KnowledgeBaseRouteImport } from './routes/knowledge-base'
 import { Route as IssueRadarRouteImport } from './routes/issue-radar'
 import { Route as GrievancesRouteImport } from './routes/grievances'
 import { Route as FundsProjectsRouteImport } from './routes/funds-projects'
+import { Route as EventLifecycleRouteImport } from './routes/event-lifecycle'
+import { Route as EmergencyDeskRouteImport } from './routes/emergency-desk'
+import { Route as DocumentVaultRouteImport } from './routes/document-vault'
+import { Route as DevelopmentDemandBankRouteImport } from './routes/development-demand-bank'
+import { Route as DepartmentFilesRouteImport } from './routes/department-files'
 import { Route as DailyBriefingRouteImport } from './routes/daily-briefing'
+import { Route as CommitmentTrackerRouteImport } from './routes/commitment-tracker'
+import { Route as ClosureVerificationRouteImport } from './routes/closure-verification'
 import { Route as CitizenDatabaseRouteImport } from './routes/citizen-database'
 import { Route as CalendarRouteImport } from './routes/calendar'
 import { Route as BroadcastsRouteImport } from './routes/broadcasts'
 import { Route as BriefingsSpeechesRouteImport } from './routes/briefings-speeches'
+import { Route as AuthorityMappingRouteImport } from './routes/authority-mapping'
+import { Route as ApprovalsRouteImport } from './routes/approvals'
 import { Route as IndexRouteImport } from './routes/index'
 
+const WorkInspectionRoute = WorkInspectionRouteImport.update({
+  id: '/work-inspection',
+  path: '/work-inspection',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const VisitorsRoute = VisitorsRouteImport.update({
   id: '/visitors',
   path: '/visitors',
   getParentRoute: () => rootRouteImport,
 } as any)
+const UnifiedInboxRoute = UnifiedInboxRouteImport.update({
+  id: '/unified-inbox',
+  path: '/unified-inbox',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const StakeholderCrmRoute = StakeholderCrmRouteImport.update({
   id: '/stakeholder-crm',
   path: '/stakeholder-crm',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const StaffTasksRoute = StaffTasksRouteImport.update({
+  id: '/staff-tasks',
+  path: '/staff-tasks',
   getParentRoute: () => rootRouteImport,
 } as any)
 const SettingsTeamRoute = SettingsTeamRouteImport.update({
@@ -49,6 +80,11 @@ const SettingsTeamRoute = SettingsTeamRouteImport.update({
 const SentimentRoute = SentimentRouteImport.update({
   id: '/sentiment',
   path: '/sentiment',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const SchemeAssistanceRoute = SchemeAssistanceRouteImport.update({
+  id: '/scheme-assistance',
+  path: '/scheme-assistance',
   getParentRoute: () => rootRouteImport,
 } as any)
 const ReportsRoute = ReportsRouteImport.update({
@@ -86,9 +122,24 @@ const OpportunitiesRoute = OpportunitiesRouteImport.update({
   path: '/opportunities',
   getParentRoute: () => rootRouteImport,
 } as any)
+const OfficerDirectoryRoute = OfficerDirectoryRouteImport.update({
+  id: '/officer-directory',
+  path: '/officer-directory',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const MediaWatchRoute = MediaWatchRouteImport.update({
   id: '/media-watch',
   path: '/media-watch',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const LocalBodyMeetingsRoute = LocalBodyMeetingsRouteImport.update({
+  id: '/local-body-meetings',
+  path: '/local-body-meetings',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const KnowledgeBaseRoute = KnowledgeBaseRouteImport.update({
+  id: '/knowledge-base',
+  path: '/knowledge-base',
   getParentRoute: () => rootRouteImport,
 } as any)
 const IssueRadarRoute = IssueRadarRouteImport.update({
@@ -106,9 +157,44 @@ const FundsProjectsRoute = FundsProjectsRouteImport.update({
   path: '/funds-projects',
   getParentRoute: () => rootRouteImport,
 } as any)
+const EventLifecycleRoute = EventLifecycleRouteImport.update({
+  id: '/event-lifecycle',
+  path: '/event-lifecycle',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const EmergencyDeskRoute = EmergencyDeskRouteImport.update({
+  id: '/emergency-desk',
+  path: '/emergency-desk',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const DocumentVaultRoute = DocumentVaultRouteImport.update({
+  id: '/document-vault',
+  path: '/document-vault',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const DevelopmentDemandBankRoute = DevelopmentDemandBankRouteImport.update({
+  id: '/development-demand-bank',
+  path: '/development-demand-bank',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const DepartmentFilesRoute = DepartmentFilesRouteImport.update({
+  id: '/department-files',
+  path: '/department-files',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const DailyBriefingRoute = DailyBriefingRouteImport.update({
   id: '/daily-briefing',
   path: '/daily-briefing',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const CommitmentTrackerRoute = CommitmentTrackerRouteImport.update({
+  id: '/commitment-tracker',
+  path: '/commitment-tracker',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const ClosureVerificationRoute = ClosureVerificationRouteImport.update({
+  id: '/closure-verification',
+  path: '/closure-verification',
   getParentRoute: () => rootRouteImport,
 } as any)
 const CitizenDatabaseRoute = CitizenDatabaseRouteImport.update({
@@ -131,6 +217,16 @@ const BriefingsSpeechesRoute = BriefingsSpeechesRouteImport.update({
   path: '/briefings-speeches',
   getParentRoute: () => rootRouteImport,
 } as any)
+const AuthorityMappingRoute = AuthorityMappingRouteImport.update({
+  id: '/authority-mapping',
+  path: '/authority-mapping',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const ApprovalsRoute = ApprovalsRouteImport.update({
+  id: '/approvals',
+  path: '/approvals',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const IndexRoute = IndexRouteImport.update({
   id: '/',
   path: '/',
@@ -139,15 +235,27 @@ const IndexRoute = IndexRouteImport.update({
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
+  '/approvals': typeof ApprovalsRoute
+  '/authority-mapping': typeof AuthorityMappingRoute
   '/briefings-speeches': typeof BriefingsSpeechesRoute
   '/broadcasts': typeof BroadcastsRoute
   '/calendar': typeof CalendarRoute
   '/citizen-database': typeof CitizenDatabaseRoute
+  '/closure-verification': typeof ClosureVerificationRoute
+  '/commitment-tracker': typeof CommitmentTrackerRoute
   '/daily-briefing': typeof DailyBriefingRoute
+  '/department-files': typeof DepartmentFilesRoute
+  '/development-demand-bank': typeof DevelopmentDemandBankRoute
+  '/document-vault': typeof DocumentVaultRoute
+  '/emergency-desk': typeof EmergencyDeskRoute
+  '/event-lifecycle': typeof EventLifecycleRoute
   '/funds-projects': typeof FundsProjectsRoute
   '/grievances': typeof GrievancesRoute
   '/issue-radar': typeof IssueRadarRoute
+  '/knowledge-base': typeof KnowledgeBaseRoute
+  '/local-body-meetings': typeof LocalBodyMeetingsRoute
   '/media-watch': typeof MediaWatchRoute
+  '/officer-directory': typeof OfficerDirectoryRoute
   '/opportunities': typeof OpportunitiesRoute
   '/parliament-tracker': typeof ParliamentTrackerRoute
   '/positioning': typeof PositioningRoute
@@ -155,22 +263,38 @@ export interface FileRoutesByFullPath {
   '/recommendation-letters': typeof RecommendationLettersRoute
   '/recommendations': typeof RecommendationsRoute
   '/reports': typeof ReportsRoute
+  '/scheme-assistance': typeof SchemeAssistanceRoute
   '/sentiment': typeof SentimentRoute
   '/settings-team': typeof SettingsTeamRoute
+  '/staff-tasks': typeof StaffTasksRoute
   '/stakeholder-crm': typeof StakeholderCrmRoute
+  '/unified-inbox': typeof UnifiedInboxRoute
   '/visitors': typeof VisitorsRoute
+  '/work-inspection': typeof WorkInspectionRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
+  '/approvals': typeof ApprovalsRoute
+  '/authority-mapping': typeof AuthorityMappingRoute
   '/briefings-speeches': typeof BriefingsSpeechesRoute
   '/broadcasts': typeof BroadcastsRoute
   '/calendar': typeof CalendarRoute
   '/citizen-database': typeof CitizenDatabaseRoute
+  '/closure-verification': typeof ClosureVerificationRoute
+  '/commitment-tracker': typeof CommitmentTrackerRoute
   '/daily-briefing': typeof DailyBriefingRoute
+  '/department-files': typeof DepartmentFilesRoute
+  '/development-demand-bank': typeof DevelopmentDemandBankRoute
+  '/document-vault': typeof DocumentVaultRoute
+  '/emergency-desk': typeof EmergencyDeskRoute
+  '/event-lifecycle': typeof EventLifecycleRoute
   '/funds-projects': typeof FundsProjectsRoute
   '/grievances': typeof GrievancesRoute
   '/issue-radar': typeof IssueRadarRoute
+  '/knowledge-base': typeof KnowledgeBaseRoute
+  '/local-body-meetings': typeof LocalBodyMeetingsRoute
   '/media-watch': typeof MediaWatchRoute
+  '/officer-directory': typeof OfficerDirectoryRoute
   '/opportunities': typeof OpportunitiesRoute
   '/parliament-tracker': typeof ParliamentTrackerRoute
   '/positioning': typeof PositioningRoute
@@ -178,23 +302,39 @@ export interface FileRoutesByTo {
   '/recommendation-letters': typeof RecommendationLettersRoute
   '/recommendations': typeof RecommendationsRoute
   '/reports': typeof ReportsRoute
+  '/scheme-assistance': typeof SchemeAssistanceRoute
   '/sentiment': typeof SentimentRoute
   '/settings-team': typeof SettingsTeamRoute
+  '/staff-tasks': typeof StaffTasksRoute
   '/stakeholder-crm': typeof StakeholderCrmRoute
+  '/unified-inbox': typeof UnifiedInboxRoute
   '/visitors': typeof VisitorsRoute
+  '/work-inspection': typeof WorkInspectionRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
+  '/approvals': typeof ApprovalsRoute
+  '/authority-mapping': typeof AuthorityMappingRoute
   '/briefings-speeches': typeof BriefingsSpeechesRoute
   '/broadcasts': typeof BroadcastsRoute
   '/calendar': typeof CalendarRoute
   '/citizen-database': typeof CitizenDatabaseRoute
+  '/closure-verification': typeof ClosureVerificationRoute
+  '/commitment-tracker': typeof CommitmentTrackerRoute
   '/daily-briefing': typeof DailyBriefingRoute
+  '/department-files': typeof DepartmentFilesRoute
+  '/development-demand-bank': typeof DevelopmentDemandBankRoute
+  '/document-vault': typeof DocumentVaultRoute
+  '/emergency-desk': typeof EmergencyDeskRoute
+  '/event-lifecycle': typeof EventLifecycleRoute
   '/funds-projects': typeof FundsProjectsRoute
   '/grievances': typeof GrievancesRoute
   '/issue-radar': typeof IssueRadarRoute
+  '/knowledge-base': typeof KnowledgeBaseRoute
+  '/local-body-meetings': typeof LocalBodyMeetingsRoute
   '/media-watch': typeof MediaWatchRoute
+  '/officer-directory': typeof OfficerDirectoryRoute
   '/opportunities': typeof OpportunitiesRoute
   '/parliament-tracker': typeof ParliamentTrackerRoute
   '/positioning': typeof PositioningRoute
@@ -202,24 +342,40 @@ export interface FileRoutesById {
   '/recommendation-letters': typeof RecommendationLettersRoute
   '/recommendations': typeof RecommendationsRoute
   '/reports': typeof ReportsRoute
+  '/scheme-assistance': typeof SchemeAssistanceRoute
   '/sentiment': typeof SentimentRoute
   '/settings-team': typeof SettingsTeamRoute
+  '/staff-tasks': typeof StaffTasksRoute
   '/stakeholder-crm': typeof StakeholderCrmRoute
+  '/unified-inbox': typeof UnifiedInboxRoute
   '/visitors': typeof VisitorsRoute
+  '/work-inspection': typeof WorkInspectionRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
   fullPaths:
     | '/'
+    | '/approvals'
+    | '/authority-mapping'
     | '/briefings-speeches'
     | '/broadcasts'
     | '/calendar'
     | '/citizen-database'
+    | '/closure-verification'
+    | '/commitment-tracker'
     | '/daily-briefing'
+    | '/department-files'
+    | '/development-demand-bank'
+    | '/document-vault'
+    | '/emergency-desk'
+    | '/event-lifecycle'
     | '/funds-projects'
     | '/grievances'
     | '/issue-radar'
+    | '/knowledge-base'
+    | '/local-body-meetings'
     | '/media-watch'
+    | '/officer-directory'
     | '/opportunities'
     | '/parliament-tracker'
     | '/positioning'
@@ -227,22 +383,38 @@ export interface FileRouteTypes {
     | '/recommendation-letters'
     | '/recommendations'
     | '/reports'
+    | '/scheme-assistance'
     | '/sentiment'
     | '/settings-team'
+    | '/staff-tasks'
     | '/stakeholder-crm'
+    | '/unified-inbox'
     | '/visitors'
+    | '/work-inspection'
   fileRoutesByTo: FileRoutesByTo
   to:
     | '/'
+    | '/approvals'
+    | '/authority-mapping'
     | '/briefings-speeches'
     | '/broadcasts'
     | '/calendar'
     | '/citizen-database'
+    | '/closure-verification'
+    | '/commitment-tracker'
     | '/daily-briefing'
+    | '/department-files'
+    | '/development-demand-bank'
+    | '/document-vault'
+    | '/emergency-desk'
+    | '/event-lifecycle'
     | '/funds-projects'
     | '/grievances'
     | '/issue-radar'
+    | '/knowledge-base'
+    | '/local-body-meetings'
     | '/media-watch'
+    | '/officer-directory'
     | '/opportunities'
     | '/parliament-tracker'
     | '/positioning'
@@ -250,22 +422,38 @@ export interface FileRouteTypes {
     | '/recommendation-letters'
     | '/recommendations'
     | '/reports'
+    | '/scheme-assistance'
     | '/sentiment'
     | '/settings-team'
+    | '/staff-tasks'
     | '/stakeholder-crm'
+    | '/unified-inbox'
     | '/visitors'
+    | '/work-inspection'
   id:
     | '__root__'
     | '/'
+    | '/approvals'
+    | '/authority-mapping'
     | '/briefings-speeches'
     | '/broadcasts'
     | '/calendar'
     | '/citizen-database'
+    | '/closure-verification'
+    | '/commitment-tracker'
     | '/daily-briefing'
+    | '/department-files'
+    | '/development-demand-bank'
+    | '/document-vault'
+    | '/emergency-desk'
+    | '/event-lifecycle'
     | '/funds-projects'
     | '/grievances'
     | '/issue-radar'
+    | '/knowledge-base'
+    | '/local-body-meetings'
     | '/media-watch'
+    | '/officer-directory'
     | '/opportunities'
     | '/parliament-tracker'
     | '/positioning'
@@ -273,23 +461,39 @@ export interface FileRouteTypes {
     | '/recommendation-letters'
     | '/recommendations'
     | '/reports'
+    | '/scheme-assistance'
     | '/sentiment'
     | '/settings-team'
+    | '/staff-tasks'
     | '/stakeholder-crm'
+    | '/unified-inbox'
     | '/visitors'
+    | '/work-inspection'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
+  ApprovalsRoute: typeof ApprovalsRoute
+  AuthorityMappingRoute: typeof AuthorityMappingRoute
   BriefingsSpeechesRoute: typeof BriefingsSpeechesRoute
   BroadcastsRoute: typeof BroadcastsRoute
   CalendarRoute: typeof CalendarRoute
   CitizenDatabaseRoute: typeof CitizenDatabaseRoute
+  ClosureVerificationRoute: typeof ClosureVerificationRoute
+  CommitmentTrackerRoute: typeof CommitmentTrackerRoute
   DailyBriefingRoute: typeof DailyBriefingRoute
+  DepartmentFilesRoute: typeof DepartmentFilesRoute
+  DevelopmentDemandBankRoute: typeof DevelopmentDemandBankRoute
+  DocumentVaultRoute: typeof DocumentVaultRoute
+  EmergencyDeskRoute: typeof EmergencyDeskRoute
+  EventLifecycleRoute: typeof EventLifecycleRoute
   FundsProjectsRoute: typeof FundsProjectsRoute
   GrievancesRoute: typeof GrievancesRoute
   IssueRadarRoute: typeof IssueRadarRoute
+  KnowledgeBaseRoute: typeof KnowledgeBaseRoute
+  LocalBodyMeetingsRoute: typeof LocalBodyMeetingsRoute
   MediaWatchRoute: typeof MediaWatchRoute
+  OfficerDirectoryRoute: typeof OfficerDirectoryRoute
   OpportunitiesRoute: typeof OpportunitiesRoute
   ParliamentTrackerRoute: typeof ParliamentTrackerRoute
   PositioningRoute: typeof PositioningRoute
@@ -297,14 +501,25 @@ export interface RootRouteChildren {
   RecommendationLettersRoute: typeof RecommendationLettersRoute
   RecommendationsRoute: typeof RecommendationsRoute
   ReportsRoute: typeof ReportsRoute
+  SchemeAssistanceRoute: typeof SchemeAssistanceRoute
   SentimentRoute: typeof SentimentRoute
   SettingsTeamRoute: typeof SettingsTeamRoute
+  StaffTasksRoute: typeof StaffTasksRoute
   StakeholderCrmRoute: typeof StakeholderCrmRoute
+  UnifiedInboxRoute: typeof UnifiedInboxRoute
   VisitorsRoute: typeof VisitorsRoute
+  WorkInspectionRoute: typeof WorkInspectionRoute
 }
 
 declare module '@tanstack/react-router' {
   interface FileRoutesByPath {
+    '/work-inspection': {
+      id: '/work-inspection'
+      path: '/work-inspection'
+      fullPath: '/work-inspection'
+      preLoaderRoute: typeof WorkInspectionRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/visitors': {
       id: '/visitors'
       path: '/visitors'
@@ -312,11 +527,25 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof VisitorsRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/unified-inbox': {
+      id: '/unified-inbox'
+      path: '/unified-inbox'
+      fullPath: '/unified-inbox'
+      preLoaderRoute: typeof UnifiedInboxRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/stakeholder-crm': {
       id: '/stakeholder-crm'
       path: '/stakeholder-crm'
       fullPath: '/stakeholder-crm'
       preLoaderRoute: typeof StakeholderCrmRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/staff-tasks': {
+      id: '/staff-tasks'
+      path: '/staff-tasks'
+      fullPath: '/staff-tasks'
+      preLoaderRoute: typeof StaffTasksRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/settings-team': {
@@ -331,6 +560,13 @@ declare module '@tanstack/react-router' {
       path: '/sentiment'
       fullPath: '/sentiment'
       preLoaderRoute: typeof SentimentRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/scheme-assistance': {
+      id: '/scheme-assistance'
+      path: '/scheme-assistance'
+      fullPath: '/scheme-assistance'
+      preLoaderRoute: typeof SchemeAssistanceRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/reports': {
@@ -382,11 +618,32 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof OpportunitiesRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/officer-directory': {
+      id: '/officer-directory'
+      path: '/officer-directory'
+      fullPath: '/officer-directory'
+      preLoaderRoute: typeof OfficerDirectoryRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/media-watch': {
       id: '/media-watch'
       path: '/media-watch'
       fullPath: '/media-watch'
       preLoaderRoute: typeof MediaWatchRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/local-body-meetings': {
+      id: '/local-body-meetings'
+      path: '/local-body-meetings'
+      fullPath: '/local-body-meetings'
+      preLoaderRoute: typeof LocalBodyMeetingsRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/knowledge-base': {
+      id: '/knowledge-base'
+      path: '/knowledge-base'
+      fullPath: '/knowledge-base'
+      preLoaderRoute: typeof KnowledgeBaseRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/issue-radar': {
@@ -410,11 +667,60 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof FundsProjectsRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/event-lifecycle': {
+      id: '/event-lifecycle'
+      path: '/event-lifecycle'
+      fullPath: '/event-lifecycle'
+      preLoaderRoute: typeof EventLifecycleRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/emergency-desk': {
+      id: '/emergency-desk'
+      path: '/emergency-desk'
+      fullPath: '/emergency-desk'
+      preLoaderRoute: typeof EmergencyDeskRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/document-vault': {
+      id: '/document-vault'
+      path: '/document-vault'
+      fullPath: '/document-vault'
+      preLoaderRoute: typeof DocumentVaultRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/development-demand-bank': {
+      id: '/development-demand-bank'
+      path: '/development-demand-bank'
+      fullPath: '/development-demand-bank'
+      preLoaderRoute: typeof DevelopmentDemandBankRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/department-files': {
+      id: '/department-files'
+      path: '/department-files'
+      fullPath: '/department-files'
+      preLoaderRoute: typeof DepartmentFilesRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/daily-briefing': {
       id: '/daily-briefing'
       path: '/daily-briefing'
       fullPath: '/daily-briefing'
       preLoaderRoute: typeof DailyBriefingRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/commitment-tracker': {
+      id: '/commitment-tracker'
+      path: '/commitment-tracker'
+      fullPath: '/commitment-tracker'
+      preLoaderRoute: typeof CommitmentTrackerRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/closure-verification': {
+      id: '/closure-verification'
+      path: '/closure-verification'
+      fullPath: '/closure-verification'
+      preLoaderRoute: typeof ClosureVerificationRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/citizen-database': {
@@ -445,6 +751,20 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof BriefingsSpeechesRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/authority-mapping': {
+      id: '/authority-mapping'
+      path: '/authority-mapping'
+      fullPath: '/authority-mapping'
+      preLoaderRoute: typeof AuthorityMappingRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/approvals': {
+      id: '/approvals'
+      path: '/approvals'
+      fullPath: '/approvals'
+      preLoaderRoute: typeof ApprovalsRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/': {
       id: '/'
       path: '/'
@@ -457,15 +777,27 @@ declare module '@tanstack/react-router' {
 
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
+  ApprovalsRoute: ApprovalsRoute,
+  AuthorityMappingRoute: AuthorityMappingRoute,
   BriefingsSpeechesRoute: BriefingsSpeechesRoute,
   BroadcastsRoute: BroadcastsRoute,
   CalendarRoute: CalendarRoute,
   CitizenDatabaseRoute: CitizenDatabaseRoute,
+  ClosureVerificationRoute: ClosureVerificationRoute,
+  CommitmentTrackerRoute: CommitmentTrackerRoute,
   DailyBriefingRoute: DailyBriefingRoute,
+  DepartmentFilesRoute: DepartmentFilesRoute,
+  DevelopmentDemandBankRoute: DevelopmentDemandBankRoute,
+  DocumentVaultRoute: DocumentVaultRoute,
+  EmergencyDeskRoute: EmergencyDeskRoute,
+  EventLifecycleRoute: EventLifecycleRoute,
   FundsProjectsRoute: FundsProjectsRoute,
   GrievancesRoute: GrievancesRoute,
   IssueRadarRoute: IssueRadarRoute,
+  KnowledgeBaseRoute: KnowledgeBaseRoute,
+  LocalBodyMeetingsRoute: LocalBodyMeetingsRoute,
   MediaWatchRoute: MediaWatchRoute,
+  OfficerDirectoryRoute: OfficerDirectoryRoute,
   OpportunitiesRoute: OpportunitiesRoute,
   ParliamentTrackerRoute: ParliamentTrackerRoute,
   PositioningRoute: PositioningRoute,
@@ -473,10 +805,14 @@ const rootRouteChildren: RootRouteChildren = {
   RecommendationLettersRoute: RecommendationLettersRoute,
   RecommendationsRoute: RecommendationsRoute,
   ReportsRoute: ReportsRoute,
+  SchemeAssistanceRoute: SchemeAssistanceRoute,
   SentimentRoute: SentimentRoute,
   SettingsTeamRoute: SettingsTeamRoute,
+  StaffTasksRoute: StaffTasksRoute,
   StakeholderCrmRoute: StakeholderCrmRoute,
+  UnifiedInboxRoute: UnifiedInboxRoute,
   VisitorsRoute: VisitorsRoute,
+  WorkInspectionRoute: WorkInspectionRoute,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)
