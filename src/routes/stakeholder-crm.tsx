@@ -65,7 +65,7 @@ const UPCOMING_GREETINGS = [
   { id: "g5", name: "Swamiji Shantamurthy", occasion: "Festival Greeting", date: "14 Jul", channel: "MP WhatsApp + In-person", sender: "MP Personal", tier: "VIP" as Tier },
 ];
 
-function CRMPage() {
+function PeopleTab() {
   const [selectedCats, setSelectedCats] = useState<string[]>([]);
   const [search, setSearch] = useState("");
   const [active, setActive] = useState<Contact | null>(null);
@@ -88,10 +88,7 @@ function CRMPage() {
 
   return (
     <div className="space-y-6">
-      <div>
-        <h1 className="text-3xl font-bold text-[#0A1F44]">Stakeholder CRM</h1>
-        <p className="text-slate-500 mt-1">Relationship intelligence for the constituency network</p>
-      </div>
+
 
       {/* Filters */}
       <Card className="border-slate-200">
