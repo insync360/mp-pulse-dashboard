@@ -10,6 +10,7 @@
 
 import { Route as rootRouteImport } from './routes/__root'
 import { Route as VisitorsRouteImport } from './routes/visitors'
+import { Route as UnifiedInboxRouteImport } from './routes/unified-inbox'
 import { Route as StakeholderCrmRouteImport } from './routes/stakeholder-crm'
 import { Route as SettingsTeamRouteImport } from './routes/settings-team'
 import { Route as SentimentRouteImport } from './routes/sentiment'
@@ -34,6 +35,11 @@ import { Route as IndexRouteImport } from './routes/index'
 const VisitorsRoute = VisitorsRouteImport.update({
   id: '/visitors',
   path: '/visitors',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const UnifiedInboxRoute = UnifiedInboxRouteImport.update({
+  id: '/unified-inbox',
+  path: '/unified-inbox',
   getParentRoute: () => rootRouteImport,
 } as any)
 const StakeholderCrmRoute = StakeholderCrmRouteImport.update({
@@ -158,6 +164,7 @@ export interface FileRoutesByFullPath {
   '/sentiment': typeof SentimentRoute
   '/settings-team': typeof SettingsTeamRoute
   '/stakeholder-crm': typeof StakeholderCrmRoute
+  '/unified-inbox': typeof UnifiedInboxRoute
   '/visitors': typeof VisitorsRoute
 }
 export interface FileRoutesByTo {
@@ -181,6 +188,7 @@ export interface FileRoutesByTo {
   '/sentiment': typeof SentimentRoute
   '/settings-team': typeof SettingsTeamRoute
   '/stakeholder-crm': typeof StakeholderCrmRoute
+  '/unified-inbox': typeof UnifiedInboxRoute
   '/visitors': typeof VisitorsRoute
 }
 export interface FileRoutesById {
@@ -205,6 +213,7 @@ export interface FileRoutesById {
   '/sentiment': typeof SentimentRoute
   '/settings-team': typeof SettingsTeamRoute
   '/stakeholder-crm': typeof StakeholderCrmRoute
+  '/unified-inbox': typeof UnifiedInboxRoute
   '/visitors': typeof VisitorsRoute
 }
 export interface FileRouteTypes {
@@ -230,6 +239,7 @@ export interface FileRouteTypes {
     | '/sentiment'
     | '/settings-team'
     | '/stakeholder-crm'
+    | '/unified-inbox'
     | '/visitors'
   fileRoutesByTo: FileRoutesByTo
   to:
@@ -253,6 +263,7 @@ export interface FileRouteTypes {
     | '/sentiment'
     | '/settings-team'
     | '/stakeholder-crm'
+    | '/unified-inbox'
     | '/visitors'
   id:
     | '__root__'
@@ -276,6 +287,7 @@ export interface FileRouteTypes {
     | '/sentiment'
     | '/settings-team'
     | '/stakeholder-crm'
+    | '/unified-inbox'
     | '/visitors'
   fileRoutesById: FileRoutesById
 }
@@ -300,6 +312,7 @@ export interface RootRouteChildren {
   SentimentRoute: typeof SentimentRoute
   SettingsTeamRoute: typeof SettingsTeamRoute
   StakeholderCrmRoute: typeof StakeholderCrmRoute
+  UnifiedInboxRoute: typeof UnifiedInboxRoute
   VisitorsRoute: typeof VisitorsRoute
 }
 
@@ -310,6 +323,13 @@ declare module '@tanstack/react-router' {
       path: '/visitors'
       fullPath: '/visitors'
       preLoaderRoute: typeof VisitorsRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/unified-inbox': {
+      id: '/unified-inbox'
+      path: '/unified-inbox'
+      fullPath: '/unified-inbox'
+      preLoaderRoute: typeof UnifiedInboxRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/stakeholder-crm': {
@@ -476,18 +496,9 @@ const rootRouteChildren: RootRouteChildren = {
   SentimentRoute: SentimentRoute,
   SettingsTeamRoute: SettingsTeamRoute,
   StakeholderCrmRoute: StakeholderCrmRoute,
+  UnifiedInboxRoute: UnifiedInboxRoute,
   VisitorsRoute: VisitorsRoute,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)
   ._addFileTypes<FileRouteTypes>()
-
-import type { getRouter } from './router.tsx'
-import type { startInstance } from './start.ts'
-declare module '@tanstack/react-start' {
-  interface Register {
-    ssr: true
-    router: Awaited<ReturnType<typeof getRouter>>
-    config: Awaited<ReturnType<typeof startInstance.getOptions>>
-  }
-}
