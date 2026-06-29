@@ -1,6 +1,6 @@
 import { createFileRoute } from "@tanstack/react-router";
 import { useMemo, useState } from "react";
-import { AlertTriangle, ExternalLink, Flame, TrendingUp, X, Hash } from "lucide-react";
+import { AlertTriangle, ExternalLink, Flame, TrendingUp, X, Hash, Shield } from "lucide-react";
 
 const HASHTAGS = [
   { tag: "#BengaluruTraffic", volume: 48200, change: 22.4, level: "City" },
