@@ -1,5 +1,6 @@
 import { useMemo, useState } from "react";
-import { Link } from "@tanstack/react-router";
+import { Link, useNavigate } from "@tanstack/react-router";
+import { toast } from "sonner";
 import {
   Search, AlertTriangle, Clock, CheckCircle2, ClipboardList, HandHelping,
   Siren, FileSignature, ShieldCheck, Inbox as InboxIcon, MessageCircle, Phone,
@@ -22,7 +23,10 @@ import {
 import { useData } from "@/data/store";
 import { WARDS, type Case, type CaseStatus, type Channel, type RecordType } from "@/data/types";
 import { isAwaitingClosure, isOpen, slaBreached, formatDate, daysAgo } from "@/data/selectors";
+import { AuthorityHintPanel, suggestedTemplateFor } from "@/components/authority-hint";
+import { KbTips } from "@/components/kb-tips";
 import { cn } from "@/lib/utils";
+
 
 const recordTypeMeta: Record<RecordType, { label: string; icon: typeof ClipboardList; tone: string }> = {
   Grievance: { label: "Grievance", icon: ClipboardList, tone: "bg-blue-50 text-blue-700 border-blue-200" },
