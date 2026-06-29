@@ -166,9 +166,61 @@ export function CasesView({ lockedType, title, description, urgent }: CasesViewP
                 <InboxIcon className="h-4 w-4" /> Open Inbox
               </Button>
             </Link>
+            <Button size="sm" className="bg-saffron hover:bg-saffron/90 text-navy" onClick={() => setNewOpen(true)}>
+              + New Case
+            </Button>
           </div>
         </div>
       </div>
+
+      {/* New case dialog */}
+      <Sheet open={newOpen} onOpenChange={setNewOpen}>
+        <SheetContent className="sm:max-w-md">
+          <SheetHeader><SheetTitle>New Case</SheetTitle></SheetHeader>
+          <div className="mt-4 space-y-3 text-sm">
+            <div>
+              <label className="text-xs font-semibold text-navy">Citizen</label>
+              <Select value={draft.citizenId} onValueChange={(v) => setDraft({ ...draft, citizenId: v })}>
+                <SelectTrigger><SelectValue placeholder="Select citizen…" /></SelectTrigger>
+                <SelectContent>{citizens.map((c) => <SelectItem key={c.id} value={c.id}>{c.name} · {c.ward}</SelectItem>)}</SelectContent>
+              </Select>
+            </div>
+            <div className="grid grid-cols-2 gap-2">
+              <div>
+                <label className="text-xs font-semibold text-navy">Type</label>
+                <Select value={draft.recordType} onValueChange={(v) => setDraft({ ...draft, recordType: v as RecordType })}>
+                  <SelectTrigger><SelectValue /></SelectTrigger>
+                  <SelectContent>
+                    <SelectItem value="Grievance">Grievance</SelectItem>
+                    <SelectItem value="SchemeRequest">Scheme Request</SelectItem>
+                    <SelectItem value="RecommendationRequest">Recommendation</SelectItem>
+                    <SelectItem value="Emergency">Emergency</SelectItem>
+                    <SelectItem value="GeneralEnquiry">Enquiry</SelectItem>
+                  </SelectContent>
+                </Select>
+              </div>
+              <div>
+                <label className="text-xs font-semibold text-navy">Category</label>
+                <Select value={draft.category} onValueChange={(v) => setDraft({ ...draft, category: v })}>
+                  <SelectTrigger><SelectValue /></SelectTrigger>
+                  <SelectContent>
+                    {["Water","Roads","Electricity","Sanitation","Health","Education","Police","Land/Revenue","Pension/Ration","Housing","Civic/BBMP","Other"].map(c => <SelectItem key={c} value={c}>{c}</SelectItem>)}
+                  </SelectContent>
+                </Select>
+              </div>
+            </div>
+            <div>
+              <label className="text-xs font-semibold text-navy">Description</label>
+              <Input value={draft.description} onChange={(e) => setDraft({ ...draft, description: e.target.value })} placeholder="Briefly describe the issue…" />
+            </div>
+            <div className="flex justify-end gap-2 pt-2">
+              <Button variant="outline" onClick={() => setNewOpen(false)}>Cancel</Button>
+              <Button className="bg-navy text-white" onClick={createCase}>Create Case</Button>
+            </div>
+          </div>
+        </SheetContent>
+      </Sheet>
+
 
       {/* KPIs */}
       <div className="grid grid-cols-2 md:grid-cols-4 gap-3 mb-5">
