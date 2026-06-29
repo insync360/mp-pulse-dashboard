@@ -13,7 +13,7 @@ interface DataApi extends DataState {
   getCommitment: (id: Id) => Commitment | undefined;
   // Mutations
   updateCase: (id: Id, patch: Partial<Case>) => void;
-  addCase: (c: Case) => void;
+  addCase: (c: Case) => Case;
   addLetter: (l: Letter) => Letter;
   updateLetter: (id: Id, patch: Partial<Letter>) => void;
   addCommitment: (c: Commitment) => Commitment;
@@ -21,6 +21,8 @@ interface DataApi extends DataState {
   addAttachment: (a: Attachment) => void;
   addTask: (t: Task) => Task;
   updateTask: (id: Id, patch: Partial<Task>) => void;
+  addOfficer: (o: Officer) => Officer;
+  addEvent: (e: EventRec) => EventRec;
   // Cross-page letter prefill
   letterDraft: LetterDraftPrefill | null;
   setLetterDraft: (d: LetterDraftPrefill | null) => void;
