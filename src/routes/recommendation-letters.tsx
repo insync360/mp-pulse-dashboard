@@ -1,5 +1,5 @@
 import { createFileRoute } from "@tanstack/react-router";
-import { useMemo, useState } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
 import {
   FileText, Clock, CheckCircle2, Send, Inbox, Plus, Eye, Printer, Mail,
   MessageSquare, Truck, Sparkles, Shield, AlertTriangle, Search, Link2,
@@ -12,16 +12,20 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
 import { Switch } from "@/components/ui/switch";
-import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogFooter } from "@/components/ui/dialog";
+import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Tabs, TabsList, TabsTrigger, TabsContent } from "@/components/ui/tabs";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 import { toast } from "sonner";
+import { useData } from "@/data/store";
+import { KbTips } from "@/components/kb-tips";
+import type { LetterDraftPrefill } from "@/data/types";
 
 export const Route = createFileRoute("/recommendation-letters")({
   head: () => ({ meta: [{ title: "Letters & Correspondence — Citizen Pulse" }] }),
   component: LettersPage,
 });
+
 
 // ──────────────────────────────────────────────────────────────────────────
 // Template Library
