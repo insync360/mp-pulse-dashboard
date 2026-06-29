@@ -311,3 +311,245 @@ function PeopleTab() {
     </div>
   );
 }
+
+// ─────────── Organisations ───────────
+type Org = {
+  id: string; name: string; type: string; area: string; bearers: string;
+  influence: "High" | "Medium" | "Low"; lastMeeting: string; pending: string; events: number;
+  support: string; health: "Strong" | "Steady" | "Cooling"; dates: string; notes: string;
+};
+const ORGS: Org[] = [
+  { id: "o1", name: "Whitefield Rising RWA Federation", type: "RWA", area: "Whitefield", bearers: "Zibi Jamal, Clement Jayakumar", influence: "High", lastMeeting: "8 days ago", pending: "ORR last-mile shuttle, lake encroachment FIR", events: 6, support: "Endorsement for white-topping push", health: "Strong", dates: "Founding day 04 Aug", notes: "Most influential RWA in east BLR; press-savvy." },
+  { id: "o2", name: "FKCCI — Karnataka Chamber", type: "Industry body", area: "Kasturba Rd", bearers: "President R. Shivakumar", influence: "High", lastMeeting: "21 days ago", pending: "MSME credit panel, labour code consultation", events: 3, support: "Industry signatories on letter to MoCI", health: "Steady", dates: "AGM 14 Sep", notes: "Convene at quarterly business breakfast." },
+  { id: "o3", name: "Mahadevapura Math Trust", type: "Religious", area: "Mahadevapura", bearers: "Swamiji Shantamurthy + 7 trustees", influence: "High", lastMeeting: "31 days ago", pending: "Annadana hall expansion", events: 4, support: "Community blessing for school program", health: "Strong", dates: "Annual festival 14 Jul", notes: "MP personal darshan twice a year." },
+  { id: "o4", name: "Karnataka Vokkaligara Sangha — East", type: "Community", area: "Indiranagar", bearers: "Sec. M. Krishnegowda", influence: "Medium", lastMeeting: "44 days ago", pending: "Hostel land allotment follow-up", events: 2, support: "Community youth meet attendance", health: "Steady", dates: "Founder day 22 Mar", notes: "Sensitive — keep cross-caste balance public." },
+  { id: "o5", name: "Bengaluru Auto Drivers Union", type: "Trade assn.", area: "Multiple stands", bearers: "President C.N. Rudramurthy", influence: "Medium", lastMeeting: "12 days ago", pending: "App aggregator fare cap, traffic harassment", events: 1, support: "Quiet — protest-prone group", health: "Cooling", dates: "—", notes: "Volatile; route via Constituency Coord." },
+  { id: "o6", name: "Akshaya Mahila SHG Federation", type: "Women SHG", area: "Bommanahalli", bearers: "Convener Smt. Pushpa", influence: "Medium", lastMeeting: "9 days ago", pending: "Skill training centre, Mudra loan facilitation", events: 5, support: "300+ active members; reliable mobilisers", health: "Strong", dates: "Federation day 08 Mar", notes: "Strong on-ground voter mobilisation." },
+  { id: "o7", name: "Indus International School Trust", type: "Education", area: "Sarjapur", bearers: "Chair Sarojini Rao", influence: "Medium", lastMeeting: "60 days ago", pending: "CBSE affiliation renewal letter", events: 1, support: "Hosting MP youth town hall", health: "Steady", dates: "Annual day 12 Dec", notes: "Influential parent body." },
+  { id: "o8", name: "Manipal Hospital — Old Airport Rd", type: "Hospital", area: "Indiranagar", bearers: "MD Dr. Sudarshan Ballal", influence: "High", lastMeeting: "18 days ago", pending: "CSR health camp coordination", events: 2, support: "Free OPD camps in 4 wards", health: "Strong", dates: "Foundation day 03 Oct", notes: "Excellent partner for medical emergencies." },
+  { id: "o9", name: "Prajavani Press Club", type: "Media house", area: "MG Road", bearers: "Bureau chief A. Prakash", influence: "High", lastMeeting: "4 days ago", pending: "Exclusive on Cauvery V allocation", events: 0, support: "Coverage of constituency work", health: "Steady", dates: "Anniversary 19 Apr", notes: "Maintain weekly press-coffee cadence." },
+  { id: "o10", name: "BJP Mandal — Whitefield", type: "Party unit", area: "Whitefield", bearers: "President Mahesh Gowda", influence: "High", lastMeeting: "2 days ago", pending: "Booth committee restructuring", events: 9, support: "Cadre mobilisation, booth-level GOTV", health: "Strong", dates: "Mandal day 06 Apr", notes: "Direct line to state org." },
+];
+
+function OrganisationsTab() {
+  const [active, setActive] = useState<Org | null>(null);
+  return (
+    <div className="space-y-4">
+      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+        {ORGS.map(o => (
+          <Card key={o.id} onClick={() => setActive(o)} className="cursor-pointer hover:shadow-md transition-all border-slate-200">
+            <CardContent className="p-4">
+              <div className="flex items-start justify-between gap-2">
+                <div className="min-w-0">
+                  <p className="font-semibold text-[#0A1F44] truncate">{o.name}</p>
+                  <p className="text-xs text-slate-500">{o.type} · {o.area}</p>
+                </div>
+                <Badge className={
+                  o.influence === "High" ? "bg-[#FF9933]/15 text-[#FF9933] border border-[#FF9933]/40" :
+                  o.influence === "Medium" ? "bg-blue-50 text-blue-700 border border-blue-200" :
+                  "bg-slate-100 text-slate-600"
+                }>{o.influence}</Badge>
+              </div>
+              <p className="text-xs text-slate-600 mt-3 line-clamp-2">{o.bearers}</p>
+              <div className="mt-3 pt-3 border-t border-slate-100 grid grid-cols-2 gap-2 text-[11px]">
+                <div><span className="text-slate-400">Last meet</span><div className="font-medium text-[#0A1F44]">{o.lastMeeting}</div></div>
+                <div><span className="text-slate-400">Health</span><div className={
+                  o.health === "Strong" ? "font-medium text-emerald-600" :
+                  o.health === "Cooling" ? "font-medium text-rose-600" : "font-medium text-amber-600"
+                }>{o.health}</div></div>
+              </div>
+              <p className="text-xs text-slate-500 mt-2 line-clamp-1"><span className="text-slate-400">Pending:</span> {o.pending}</p>
+            </CardContent>
+          </Card>
+        ))}
+      </div>
+      <Sheet open={!!active} onOpenChange={o => !o && setActive(null)}>
+        <SheetContent className="w-full sm:max-w-xl overflow-y-auto">
+          {active && (
+            <>
+              <SheetHeader><SheetTitle className="text-[#0A1F44]">{active.name}</SheetTitle></SheetHeader>
+              <div className="mt-2 flex items-center gap-2 flex-wrap">
+                <Badge variant="outline">{active.type}</Badge>
+                <Badge variant="outline">{active.area}</Badge>
+                <Badge className="bg-[#FF9933]/15 text-[#FF9933] border border-[#FF9933]/40">{active.influence} influence</Badge>
+              </div>
+              <div className="mt-5 space-y-4 text-sm">
+                <Field label="Key office bearers" value={active.bearers} />
+                <Field label="Pending issues" value={active.pending} />
+                <Field label="Support requested" value={active.support} />
+                <Field label="Events attended" value={`${active.events} in last 12 months`} />
+                <Field label="Relationship health" value={active.health} />
+                <Field label="Important dates" value={active.dates} />
+                <Field label="Internal notes" value={active.notes} />
+              </div>
+              <div className="mt-4 flex flex-wrap gap-2">
+                <Button className="bg-[#0A1F44] hover:bg-[#0A1F44]/90" onClick={() => toast.success("Meeting scheduled")}><CalendarPlus className="w-4 h-4 mr-1.5" /> Schedule meeting</Button>
+                <Button variant="outline" onClick={() => toast.success("Note saved")}><ClipboardList className="w-4 h-4 mr-1.5" /> Log interaction</Button>
+              </div>
+            </>
+          )}
+        </SheetContent>
+      </Sheet>
+    </div>
+  );
+}
+
+// ─────────── Citizens (Citizen 360) ───────────
+type Citizen = {
+  id: string; name: string; ward: string; address: string; mobile: string;
+  family: string; grievances: number; schemes: string[]; meetings: number;
+  letters: number; events: number; satisfaction: number; affiliation?: string;
+};
+const CITIZENS: Citizen[] = [
+  { id: "z1", name: "Suresh Gowda", ward: "Mahadevapura W-84", address: "KR Puram 4th cross", mobile: "+91 98453 11290", family: "Spouse + 2 children", grievances: 3, schemes: ["Ration", "Ujjwala"], meetings: 2, letters: 1, events: 4, satisfaction: 4.4, affiliation: "Self-declared supporter" },
+  { id: "z2", name: "Lakshmi N.", ward: "Bommanahalli W-186", address: "Hongasandra 9th cross", mobile: "+91 99000 47731", family: "Widow, 1 daughter", grievances: 2, schemes: ["Widow pension", "Ayushman"], meetings: 3, letters: 2, events: 1, satisfaction: 4.8 },
+  { id: "z3", name: "Praveen K.", ward: "Yelahanka W-6", address: "5th main, 3rd block", mobile: "+91 80505 11876", family: "Spouse + parents", grievances: 1, schemes: [], meetings: 1, letters: 0, events: 6, satisfaction: 4.9, affiliation: "Active volunteer" },
+  { id: "z4", name: "Anitha S.", ward: "CV Raman Nagar W-90", address: "DRDO layout", mobile: "+91 98801 22340", family: "Single parent + 1 child", grievances: 4, schemes: ["PMAY", "Scholarship"], meetings: 1, letters: 3, events: 2, satisfaction: 3.6 },
+  { id: "z5", name: "Imran Pasha", ward: "Shivajinagar W-92", address: "Tannery Rd", mobile: "+91 96860 55712", family: "Spouse + 3 children", grievances: 5, schemes: ["Ration", "Mudra"], meetings: 4, letters: 2, events: 3, satisfaction: 4.1 },
+  { id: "z6", name: "Geetha Bai", ward: "Bommanahalli W-188", address: "Hongasandra 9th cross", mobile: "+91 99453 00118", family: "Spouse + 2 children", grievances: 1, schemes: ["Ujjwala"], meetings: 0, letters: 0, events: 1, satisfaction: 4.2 },
+  { id: "z7", name: "Vikram Shetty", ward: "Hebbal W-19", address: "Sahakar Nagar", mobile: "+91 98860 77001", family: "Spouse + 1 child", grievances: 2, schemes: [], meetings: 1, letters: 1, events: 5, satisfaction: 4.5, affiliation: "Donor" },
+  { id: "z8", name: "Mr. Rangaswamy", ward: "Rajajinagar W-101", address: "5th block", mobile: "+91 98455 19920", family: "Spouse + 4 children", grievances: 3, schemes: ["Senior citizen pension"], meetings: 5, letters: 4, events: 2, satisfaction: 4.7 },
+];
+
+function CitizensTab() {
+  const [active, setActive] = useState<Citizen | null>(null);
+  return (
+    <div className="space-y-4">
+      <div className="rounded-lg border border-amber-200 bg-amber-50/50 p-3 text-xs text-amber-900 flex items-start gap-2">
+        <Shield className="w-3.5 h-3.5 mt-0.5 shrink-0" />
+        <span>Citizen 360 — affiliation notes shown only when voluntarily declared. Sensitive contact details are masked for non-authorised users.</span>
+      </div>
+      <Card>
+        <table className="w-full text-sm">
+          <thead className="bg-slate-50 text-xs uppercase tracking-wider text-slate-500">
+            <tr>
+              <th className="text-left px-4 py-2.5">Citizen</th>
+              <th className="text-left px-4 py-2.5">Ward</th>
+              <th className="text-left px-4 py-2.5">Mobile</th>
+              <th className="text-center px-4 py-2.5">Grievances</th>
+              <th className="text-center px-4 py-2.5">Schemes</th>
+              <th className="text-center px-4 py-2.5">Meetings</th>
+              <th className="text-center px-4 py-2.5">Letters</th>
+              <th className="text-center px-4 py-2.5">Satisfaction</th>
+            </tr>
+          </thead>
+          <tbody>
+            {CITIZENS.map(c => (
+              <tr key={c.id} onClick={() => setActive(c)} className="border-t hover:bg-slate-50/50 cursor-pointer">
+                <td className="px-4 py-3 font-medium text-[#0A1F44]">{c.name}</td>
+                <td className="px-4 py-3 text-xs">{c.ward}</td>
+                <td className="px-4 py-3 text-xs text-slate-500">{c.mobile.slice(0, 8)}•••••</td>
+                <td className="px-4 py-3 text-center">{c.grievances}</td>
+                <td className="px-4 py-3 text-center">{c.schemes.length}</td>
+                <td className="px-4 py-3 text-center">{c.meetings}</td>
+                <td className="px-4 py-3 text-center">{c.letters}</td>
+                <td className="px-4 py-3 text-center"><span className={c.satisfaction >= 4.5 ? "text-emerald-600 font-semibold" : c.satisfaction >= 4 ? "text-amber-600 font-semibold" : "text-rose-600 font-semibold"}>{c.satisfaction.toFixed(1)} ★</span></td>
+              </tr>
+            ))}
+          </tbody>
+        </table>
+      </Card>
+      <Sheet open={!!active} onOpenChange={o => !o && setActive(null)}>
+        <SheetContent className="w-full sm:max-w-xl overflow-y-auto">
+          {active && (
+            <>
+              <SheetHeader><SheetTitle className="text-[#0A1F44]">{active.name}</SheetTitle></SheetHeader>
+              <p className="text-sm text-slate-500 mt-1">{active.ward} · {active.address}</p>
+              <div className="mt-4 grid grid-cols-2 gap-3 text-sm">
+                <Field label="Mobile" value={active.mobile} />
+                <Field label="Family" value={active.family} />
+                <Field label="Past grievances" value={`${active.grievances} (2 open)`} />
+                <Field label="Schemes requested" value={active.schemes.join(", ") || "None"} />
+                <Field label="Meetings with MP" value={`${active.meetings}`} />
+                <Field label="Letters issued" value={`${active.letters}`} />
+                <Field label="Events attended" value={`${active.events}`} />
+                <Field label="Satisfaction history" value={`${active.satisfaction.toFixed(1)} ★ avg`} />
+              </div>
+              {active.affiliation && (
+                <div className="mt-4 p-3 rounded-lg bg-slate-50 border border-slate-200 text-xs text-slate-600">
+                  <span className="font-semibold text-[#0A1F44]">Voluntary affiliation note:</span> {active.affiliation}
+                </div>
+              )}
+              <div className="mt-4 flex flex-wrap gap-2">
+                <Button className="bg-[#0A1F44] hover:bg-[#0A1F44]/90" onClick={() => toast.success("Routed to Grievances")}>Create grievance</Button>
+                <Button variant="outline" onClick={() => toast.success("Routed to Letters")}>Generate letter</Button>
+                <Button variant="outline" onClick={() => toast.success("Routed to Scheme Assistance")}>Scheme assist</Button>
+              </div>
+            </>
+          )}
+        </SheetContent>
+      </Sheet>
+    </div>
+  );
+}
+
+function OfficialsTab() {
+  return (
+    <Card className="p-10 text-center border-dashed">
+      <Users className="w-10 h-10 text-[#FF9933] mx-auto mb-3" />
+      <h3 className="font-semibold text-[#0A1F44]">Officials directory</h3>
+      <p className="text-sm text-slate-500 mt-1 max-w-md mx-auto">
+        Officials are managed as the single source of truth in the Officer Directory module.
+        All interaction history, transfers, and pending matters surface there.
+      </p>
+      <a href="/officer-directory" className="inline-block mt-4">
+        <Button className="bg-[#FF9933] hover:bg-[#FF9933]/90 text-white">Open Officer Directory →</Button>
+      </a>
+    </Card>
+  );
+}
+
+function Field({ label, value }: { label: string; value: string }) {
+  return (
+    <div>
+      <div className="text-[10px] uppercase tracking-wider text-slate-400">{label}</div>
+      <div className="text-sm text-slate-700 mt-0.5">{value}</div>
+    </div>
+  );
+}
+
+function CRMPage() {
+  const [type, setType] = useState<"people" | "orgs" | "citizens" | "officials">("people");
+  const [globalSearch, setGlobalSearch] = useState("");
+  return (
+    <div className="p-6 space-y-5 max-w-[1500px] mx-auto">
+      <div className="flex items-end justify-between gap-4 flex-wrap">
+        <div>
+          <h1 className="text-2xl font-bold tracking-tight text-[#0A1F44]">Relationships</h1>
+          <p className="text-sm text-slate-500 mt-1">
+            Unified CRM — people, organisations, citizens and officials in one searchable graph.
+          </p>
+        </div>
+        <div className="relative w-72">
+          <Search className="absolute left-2.5 top-2.5 w-4 h-4 text-slate-400" />
+          <Input value={globalSearch} onChange={e => setGlobalSearch(e.target.value)} placeholder="Search across all record types…" className="pl-8" />
+        </div>
+      </div>
+
+      <div className="flex flex-wrap gap-2">
+        {[
+          { k: "people", label: "People", count: CONTACTS.length },
+          { k: "orgs", label: "Organisations", count: ORGS.length },
+          { k: "citizens", label: "Citizens", count: 18420 },
+          { k: "officials", label: "Officials", count: 124 },
+        ].map(t => (
+          <button
+            key={t.k}
+            onClick={() => setType(t.k as typeof type)}
+            className={`px-4 py-2 rounded-lg border text-sm font-medium transition-colors ${
+              type === t.k ? "bg-[#0A1F44] text-white border-[#0A1F44]" : "bg-white text-[#0A1F44] border-slate-200 hover:bg-slate-50"
+            }`}
+          >
+            {t.label} <span className={`ml-1.5 text-[10px] ${type === t.k ? "text-white/70" : "text-slate-400"}`}>{t.count.toLocaleString()}</span>
+          </button>
+        ))}
+      </div>
+
+      {type === "people" && <PeopleTab />}
+      {type === "orgs" && <OrganisationsTab />}
+      {type === "citizens" && <CitizensTab />}
+      {type === "officials" && <OfficialsTab />}
+    </div>
+  );
+}
+
