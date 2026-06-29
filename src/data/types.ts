@@ -158,7 +158,7 @@ export interface Letter {
   commitmentId?: Id;
   subject: string;
   body: string;
-  status: "Draft" | "Approved" | "Dispatched" | "Acknowledged";
+  status: "Draft" | "Pending Approval" | "Approved" | "Dispatched" | "Acknowledged" | "Declined";
   dispatchMode: "Post" | "Hand" | "Email" | "WhatsApp";
   dispatchNo?: string;
   date: string;
