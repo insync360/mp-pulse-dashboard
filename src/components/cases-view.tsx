@@ -73,7 +73,7 @@ export interface CasesViewProps {
 type TabKey = "all" | "grievance" | "scheme" | "emergency" | "awaiting" | "mine";
 
 export function CasesView({ lockedType, title, description, urgent }: CasesViewProps) {
-  const { cases, getCitizen, getOfficer, staff } = useData();
+  const { cases, getCitizen, getOfficer, staff, citizens, addCase } = useData();
   const [tab, setTab] = useState<TabKey>(
     lockedType === "Emergency" ? "emergency"
     : lockedType === "Grievance" ? "grievance"
@@ -84,6 +84,29 @@ export function CasesView({ lockedType, title, description, urgent }: CasesViewP
   const [q, setQ] = useState("");
   const [wardFilter, setWardFilter] = useState<string>("all");
   const [active, setActive] = useState<Case | null>(null);
+  const [newOpen, setNewOpen] = useState(false);
+  const [draft, setDraft] = useState<{ citizenId: string; recordType: RecordType; category: string; description: string }>({
+    citizenId: "", recordType: lockedType && lockedType !== "AwaitingClosure" ? lockedType : "Grievance", category: "Water", description: "",
+  });
+
+  const createCase = () => {
+    if (!draft.citizenId || !draft.description.trim()) { toast.error("Citizen and description required"); return; }
+    const citizen = citizens.find((c) => c.id === draft.citizenId);
+    const id = `CSE-${4000 + cases.length}`;
+    const slaDue = new Date(Date.now() + 7 * 86400000).toISOString();
+    const c: Case = {
+      id, recordType: draft.recordType, channel: "Walk-in", status: "New",
+      citizenId: draft.citizenId, wardId: citizen?.ward ?? "Whitefield",
+      category: draft.category as Case["category"], ownerId: staff[0]?.id ?? "STF-1",
+      priority: "Medium", slaDue, description: draft.description,
+      createdAt: new Date().toISOString(),
+    };
+    addCase(c);
+    setNewOpen(false);
+    setDraft({ citizenId: "", recordType: "Grievance", category: "Water", description: "" });
+    toast.success(`${id} created`);
+  };
+
 
   // Apply locked / tab filter
   const tabFiltered = useMemo(() => {
