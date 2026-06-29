@@ -70,6 +70,8 @@ export function DataProvider({ children }: { children: ReactNode }) {
     },
     updateTask: (id, patch) =>
       setState((s) => ({ ...s, tasks: s.tasks.map((t) => (t.id === id ? { ...t, ...patch } : t)) })),
+    addOfficer: (o) => { setState((s) => ({ ...s, officers: [o, ...s.officers] })); return o; },
+    addEvent: (e) => { setState((s) => ({ ...s, events: [e, ...s.events] })); return e; },
     letterDraft,
     setLetterDraft,
     consumeLetterDraft,
