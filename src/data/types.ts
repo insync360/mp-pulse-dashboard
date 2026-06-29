@@ -158,7 +158,7 @@ export interface Letter {
   commitmentId?: Id;
   subject: string;
   body: string;
-  status: "Draft" | "Approved" | "Dispatched" | "Acknowledged";
+  status: "Draft" | "Pending Approval" | "Approved" | "Dispatched" | "Acknowledged" | "Declined";
   dispatchMode: "Post" | "Hand" | "Email" | "WhatsApp";
   dispatchNo?: string;
   date: string;
@@ -225,6 +225,61 @@ export interface DeptFile {
   status: "Pending" | "Moved" | "Returned" | "Closed";
 }
 
+export type AttachableRecord =
+  | "Case" | "Citizen" | "Officer" | "Letter" | "Commitment"
+  | "Event" | "Project" | "Demand" | "DeptFile" | "Organisation";
+
+export interface Attachment {
+  id: Id;
+  name: string;
+  kind: "PDF" | "Image" | "DOCX" | "ZIP" | "Other";
+  size: string;
+  recordType: AttachableRecord;
+  recordId: Id;
+  uploadedBy: string;
+  uploadedAt: string;
+  sensitive?: boolean;
+  expiryNote?: string;
+}
+
+export interface Task {
+  id: Id;
+  title: string;
+  ownerId: Id; // Staff
+  recordType?: AttachableRecord;
+  recordId?: Id;
+  due: string;
+  status: "Open" | "In Progress" | "Done" | "Overdue";
+  priority: "High" | "Medium" | "Low";
+}
+
+export interface Inspection {
+  id: Id;
+  projectId: Id;
+  phase: "Before" | "During" | "After";
+  date: string;
+  by: string;
+  gps: string;
+  photoLabel: string;
+  notes?: string;
+}
+
+/** Transient prefill for the Letter composer when launched from another record. */
+export interface LetterDraftPrefill {
+  templateId?: string;
+  recipientName?: string;
+  recipientDesignation?: string;
+  recipientOffice?: string;
+  recipientAddress?: string;
+  subject?: string;
+  caseId?: Id;
+  citizenId?: Id;
+  officerId?: Id;
+  commitmentId?: Id;
+  fields?: Record<string, string>;
+  linkedToLabel?: string;
+}
+
 export interface DataState {
   departments: Department[];
   schemes: Scheme[];
@@ -241,4 +296,8 @@ export interface DataState {
   demands: Demand[];
   projects: Project[];
   deptFiles: DeptFile[];
+  attachments: Attachment[];
+  tasks: Task[];
+  inspections: Inspection[];
 }
+

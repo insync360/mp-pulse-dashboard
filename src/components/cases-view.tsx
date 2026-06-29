@@ -1,5 +1,6 @@
 import { useMemo, useState } from "react";
-import { Link } from "@tanstack/react-router";
+import { Link, useNavigate } from "@tanstack/react-router";
+import { toast } from "sonner";
 import {
   Search, AlertTriangle, Clock, CheckCircle2, ClipboardList, HandHelping,
   Siren, FileSignature, ShieldCheck, Inbox as InboxIcon, MessageCircle, Phone,
@@ -22,7 +23,10 @@ import {
 import { useData } from "@/data/store";
 import { WARDS, type Case, type CaseStatus, type Channel, type RecordType } from "@/data/types";
 import { isAwaitingClosure, isOpen, slaBreached, formatDate, daysAgo } from "@/data/selectors";
+import { AuthorityHintPanel, suggestedTemplateFor } from "@/components/authority-hint";
+import { KbTips } from "@/components/kb-tips";
 import { cn } from "@/lib/utils";
+
 
 const recordTypeMeta: Record<RecordType, { label: string; icon: typeof ClipboardList; tone: string }> = {
   Grievance: { label: "Grievance", icon: ClipboardList, tone: "bg-blue-50 text-blue-700 border-blue-200" },
@@ -285,14 +289,45 @@ function Kpi({ label, value, icon: Icon, tone }: { label: string; value: number;
 }
 
 function CaseDetail({ c }: { c: Case }) {
-  const { getCitizen, getOfficer, letters, commitments, updateCase, staff } = useData();
+  const navigate = useNavigate();
+  const {
+    getCitizen, getOfficer, letters, commitments, departments, deptFiles,
+    attachments, tasks, updateCase, staff, setLetterDraft,
+  } = useData();
+
   const citizen = getCitizen(c.citizenId);
   const officer = c.officerId ? getOfficer(c.officerId) : undefined;
+  const dept = c.departmentId ? departments.find((d) => d.id === c.departmentId) : undefined;
   const owner = staff.find((s) => s.id === c.ownerId);
   const meta = recordTypeMeta[c.recordType];
   const Icon = meta.icon;
   const relatedLetters = letters.filter((l) => l.caseId === c.id);
   const relatedCommitments = commitments.filter((cm) => cm.caseId === c.id);
+  const relatedFiles = deptFiles.filter((f) => f.caseId === c.id);
+  const relatedAttachments = attachments.filter((a) => a.recordType === "Case" && a.recordId === c.id);
+  const relatedTasks = tasks.filter((t) => t.recordType === "Case" && t.recordId === c.id);
+
+  const generateLetter = () => {
+    setLetterDraft({
+      templateId: suggestedTemplateFor(c),
+      caseId: c.id,
+      citizenId: c.citizenId,
+      officerId: c.officerId,
+      recipientName: officer?.name,
+      recipientDesignation: officer?.designation,
+      recipientOffice: dept?.name,
+      subject: `Representation — ${c.category}, ${c.wardId}`,
+      fields: {
+        subjectName: citizen?.name ?? "",
+        location: `${citizen?.address ?? ""}, ${c.wardId}`,
+        issue: c.description,
+        request: "examine and resolve as per rules",
+      },
+      linkedToLabel: `Case ${c.id}`,
+    });
+    toast.success("Letter prefilled — opening composer");
+    navigate({ to: "/recommendation-letters" });
+  };
 
   return (
     <div className="space-y-5">
@@ -336,14 +371,14 @@ function CaseDetail({ c }: { c: Case }) {
             <div className="text-xs text-muted-foreground">{citizen?.address} · {citizen?.ward}</div>
             <div className="text-xs text-muted-foreground mt-0.5">{citizen?.mobiles?.[0]}</div>
           </div>
-          <Link to="/stakeholder-crm" className="text-xs text-saffron inline-flex items-center gap-0.5">
+          <Link to="/citizen-database" className="text-xs text-saffron inline-flex items-center gap-0.5">
             Citizen 360 <ArrowUpRight className="h-3 w-3" />
           </Link>
         </div>
       </Card>
 
-      {/* Officer / Owner */}
-      <div className="grid grid-cols-2 gap-3">
+      {/* Officer / Owner / Dept */}
+      <div className="grid grid-cols-3 gap-3">
         <Card className="p-3">
           <div className="text-[11px] uppercase tracking-wider text-muted-foreground">Officer</div>
           <div className="text-sm font-medium text-navy">{officer?.name ?? "—"}</div>
@@ -353,11 +388,22 @@ function CaseDetail({ c }: { c: Case }) {
           )}
         </Card>
         <Card className="p-3">
-          <div className="text-[11px] uppercase tracking-wider text-muted-foreground">Owner (office)</div>
+          <div className="text-[11px] uppercase tracking-wider text-muted-foreground">Department</div>
+          <div className="text-sm font-medium text-navy">{dept?.short ?? "—"}</div>
+          <div className="text-xs text-muted-foreground line-clamp-2">{dept?.name}</div>
+        </Card>
+        <Card className="p-3">
+          <div className="text-[11px] uppercase tracking-wider text-muted-foreground">Owner</div>
           <div className="text-sm font-medium text-navy">{owner?.name ?? "—"}</div>
           <div className="text-xs text-muted-foreground">{owner?.role}</div>
         </Card>
       </div>
+
+      {/* Embedded Authority Mapping engine */}
+      <AuthorityHintPanel c={c} onGenerateLetter={generateLetter} />
+
+      {/* KB tips */}
+      <KbTips category={c.category} compact />
 
       {/* Resolution */}
       <Card className="p-4">
@@ -368,9 +414,9 @@ function CaseDetail({ c }: { c: Case }) {
         )}
       </Card>
 
-      {/* Related */}
+      {/* Related letters */}
       <div>
-        <div className="text-xs uppercase tracking-wider text-muted-foreground mb-2">Related letters</div>
+        <div className="text-xs uppercase tracking-wider text-muted-foreground mb-2">Related letters ({relatedLetters.length})</div>
         <div className="space-y-1.5">
           {relatedLetters.length === 0 && <div className="text-xs text-muted-foreground">None</div>}
           {relatedLetters.map((l) => (
@@ -384,6 +430,8 @@ function CaseDetail({ c }: { c: Case }) {
           ))}
         </div>
       </div>
+
+      {/* Related commitments */}
       {relatedCommitments.length > 0 && (
         <div>
           <div className="text-xs uppercase tracking-wider text-muted-foreground mb-2">Linked commitments</div>
@@ -394,6 +442,63 @@ function CaseDetail({ c }: { c: Case }) {
                 <div className="text-[11px] text-muted-foreground">{cm.status} · due {formatDate(cm.dueDate)}</div>
               </Card>
             ))}
+          </div>
+        </div>
+      )}
+
+      {/* Dept file */}
+      {relatedFiles.length > 0 && (
+        <div>
+          <div className="text-xs uppercase tracking-wider text-muted-foreground mb-2">Department file</div>
+          <div className="space-y-1.5">
+            {relatedFiles.map((f) => (
+              <Link to="/department-files" key={f.id} className="block">
+                <Card className="p-2.5 hover:bg-muted/40">
+                  <div className="text-xs font-mono">{f.refNo}</div>
+                  <div className="text-sm">{f.subject}</div>
+                  <div className="text-[11px] text-muted-foreground">
+                    L{f.escalationLevel} · {f.status}{f.bottleneck ? ` · ${f.bottleneck}` : ""}
+                  </div>
+                </Card>
+              </Link>
+            ))}
+          </div>
+        </div>
+      )}
+
+      {/* Attachments */}
+      <div>
+        <div className="text-xs uppercase tracking-wider text-muted-foreground mb-2">
+          Attachments ({relatedAttachments.length})
+        </div>
+        {relatedAttachments.length === 0 ? (
+          <div className="text-xs text-muted-foreground">No files attached.</div>
+        ) : (
+          <div className="space-y-1">
+            {relatedAttachments.map((a) => (
+              <div key={a.id} className="text-xs flex items-center justify-between px-2 py-1.5 rounded border">
+                <span className="truncate text-navy">{a.name}</span>
+                <span className="text-muted-foreground ml-2">{a.kind} · {a.size}</span>
+              </div>
+            ))}
+          </div>
+        )}
+      </div>
+
+      {/* Tasks */}
+      {relatedTasks.length > 0 && (
+        <div>
+          <div className="text-xs uppercase tracking-wider text-muted-foreground mb-2">Tasks</div>
+          <div className="space-y-1">
+            {relatedTasks.map((t) => {
+              const tOwner = staff.find((s) => s.id === t.ownerId);
+              return (
+                <div key={t.id} className="text-xs flex items-center justify-between px-2 py-1.5 rounded border">
+                  <span className="text-navy">{t.title}</span>
+                  <span className="text-muted-foreground">{tOwner?.name} · {t.status}</span>
+                </div>
+              );
+            })}
           </div>
         </div>
       )}
@@ -410,9 +515,9 @@ function CaseDetail({ c }: { c: Case }) {
       </div>
 
       <div className="flex flex-wrap gap-2 pt-2 border-t">
-        <Link to="/recommendation-letters">
-          <Button variant="outline" size="sm"><FileSignature className="h-3.5 w-3.5" /> Draft letter</Button>
-        </Link>
+        <Button size="sm" className="bg-saffron hover:bg-saffron/90 text-navy" onClick={generateLetter}>
+          <FileSignature className="h-3.5 w-3.5" /> Generate Letter
+        </Button>
         <Link to="/authority-mapping">
           <Button variant="outline" size="sm"><ShieldCheck className="h-3.5 w-3.5" /> Authority map</Button>
         </Link>
@@ -420,3 +525,4 @@ function CaseDetail({ c }: { c: Case }) {
     </div>
   );
 }
+

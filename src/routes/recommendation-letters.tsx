@@ -1,5 +1,5 @@
 import { createFileRoute } from "@tanstack/react-router";
-import { useMemo, useState } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
 import {
   FileText, Clock, CheckCircle2, Send, Inbox, Plus, Eye, Printer, Mail,
   MessageSquare, Truck, Sparkles, Shield, AlertTriangle, Search, Link2,
@@ -12,16 +12,20 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
 import { Switch } from "@/components/ui/switch";
-import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogFooter } from "@/components/ui/dialog";
+import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Tabs, TabsList, TabsTrigger, TabsContent } from "@/components/ui/tabs";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 import { toast } from "sonner";
+import { useData } from "@/data/store";
+import { KbTips } from "@/components/kb-tips";
+import type { LetterDraftPrefill } from "@/data/types";
 
 export const Route = createFileRoute("/recommendation-letters")({
   head: () => ({ meta: [{ title: "Letters & Correspondence — Citizen Pulse" }] }),
   component: LettersPage,
 });
+
 
 // ──────────────────────────────────────────────────────────────────────────
 // Template Library
@@ -291,12 +295,41 @@ function riskMeta(r?: Template["riskClass"]) {
 }
 
 function LettersPage() {
+  const { consumeLetterDraft, addLetter } = useData();
   const [letters, setLetters] = useState<Letter[]>(SEED);
   const [pickerOpen, setPickerOpen] = useState(false);
-  const [composer, setComposer] = useState<{ tmpl: Template; letter?: Letter } | null>(null);
+  const [composer, setComposer] = useState<{ tmpl: Template; letter?: Letter; prefill?: LetterDraftPrefill } | null>(null);
   const [envelopeFor, setEnvelopeFor] = useState<Letter | null>(null);
   const [viewPdf, setViewPdf] = useState<Letter | null>(null);
   const [filter, setFilter] = useState({ q: "", category: "all", status: "all" });
+
+  // Consume any cross-page prefill (Case / Officer / Commitment → Letter)
+  const consumed = useRef(false);
+  useEffect(() => {
+    if (consumed.current) return;
+    const d = consumeLetterDraft();
+    if (!d) return;
+    consumed.current = true;
+    const tmpl = TEMPLATES.find((t) => t.id === d.templateId) || TEMPLATES.find((t) => t.id === "formal-req")!;
+    setComposer({
+      tmpl,
+      prefill: d,
+      letter: {
+        id: genRef(),
+        recipient: d.recipientName || tmpl.recipientType,
+        category: tmpl.category,
+        subject: d.subject || tmpl.subject,
+        linkedTo: d.linkedToLabel,
+        status: "Draft",
+        mode: "—",
+        date: new Date().toLocaleDateString("en-IN", { day: "2-digit", month: "short", year: "numeric" }),
+        templateId: tmpl.id,
+        fields: d.fields || {},
+      },
+    });
+    toast.success(`Letter pre-filled from ${d.linkedToLabel ?? "linked record"}`);
+  }, [consumeLetterDraft]);
+
 
   const counts = useMemo(() => ({
     drafts: letters.filter(l => l.status === "Draft").length + 7,
@@ -451,10 +484,32 @@ function LettersPage() {
           key={composer.letter?.id || composer.tmpl.id}
           tmpl={composer.tmpl}
           existing={composer.letter}
+          prefill={composer.prefill}
           onClose={() => setComposer(null)}
-          onSave={(l) => { setLetters(arr => { const idx = arr.findIndex(x => x.id === l.id); if (idx >= 0) { const cp = [...arr]; cp[idx] = l; return cp; } return [l, ...arr]; }); }}
+          onSave={(l) => {
+            setLetters(arr => { const idx = arr.findIndex(x => x.id === l.id); if (idx >= 0) { const cp = [...arr]; cp[idx] = l; return cp; } return [l, ...arr]; });
+            // Mirror into shared store so it appears on Case/Citizen/Officer/Commitment related lists
+            const p = composer.prefill;
+            if (p && (p.caseId || p.citizenId || p.officerId || p.commitmentId)) {
+              addLetter({
+                id: l.id,
+                templateType: l.templateId,
+                recipientType: "Officer",
+                caseId: p.caseId,
+                citizenId: p.citizenId,
+                officerId: p.officerId,
+                commitmentId: p.commitmentId,
+                subject: l.subject,
+                body: "",
+                status: l.status === "Pending Approval" ? "Pending Approval" : l.status as any,
+                dispatchMode: (l.mode === "Post" || l.mode === "Email" || l.mode === "WhatsApp") ? l.mode : "Hand",
+                date: new Date().toISOString().slice(0, 10),
+              });
+            }
+          }}
           onPrintEnvelope={(l) => setEnvelopeFor(l)}
         />
+
       )}
 
       {envelopeFor && <EnvelopeDialog letter={envelopeFor} onClose={() => setEnvelopeFor(null)} />}
@@ -480,14 +535,16 @@ function LettersPage() {
 // ──────────────────────────────────────────────────────────────────────────
 function genRef() { return `CP/LTR/2026/0${Math.floor(Math.random() * 90) + 248}`; }
 
-function ComposerDialog({ tmpl, existing, onClose, onSave, onPrintEnvelope }: {
-  tmpl: Template; existing?: Letter; onClose: () => void; onSave: (l: Letter) => void; onPrintEnvelope: (l: Letter) => void;
+function ComposerDialog({ tmpl, existing, prefill, onClose, onSave, onPrintEnvelope }: {
+  tmpl: Template; existing?: Letter; prefill?: LetterDraftPrefill;
+  onClose: () => void; onSave: (l: Letter) => void; onPrintEnvelope: (l: Letter) => void;
 }) {
   const [recipient, setRecipient] = useState({
-    name: existing?.recipient || "",
-    designation: tmpl.recipientType,
-    office: "",
-    address: "",
+    name: existing?.recipient || prefill?.recipientName || "",
+    designation: prefill?.recipientDesignation || tmpl.recipientType,
+    office: prefill?.recipientOffice || "",
+    address: prefill?.recipientAddress || "",
+
   });
   const [subject, setSubject] = useState(existing?.subject || tmpl.subject);
   const [fields, setFields] = useState<Record<string, string>>(existing?.fields || {});
@@ -680,10 +737,11 @@ function EnvelopeDialog({ letter, onClose }: { letter: Letter; onClose: () => vo
           refNo={letter.id}
         />
         <div className="text-xs text-muted-foreground">Window-envelope friendly · address positioned for standard DL envelopes and Avery L7165 labels.</div>
-        <DialogFooter>
+        <div className="flex justify-end gap-2 mt-2">
           <Button variant="outline" onClick={onClose}>Close</Button>
           <Button className="bg-[#0A1F44] text-white" onClick={() => { toast.success("Sent to printer"); onClose(); }}><Printer className="h-4 w-4" /> Print Envelope</Button>
-        </DialogFooter>
+        </div>
+
       </DialogContent>
     </Dialog>
   );
