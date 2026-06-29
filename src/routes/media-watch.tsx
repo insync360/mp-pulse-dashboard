@@ -378,12 +378,28 @@ function MediaWatchPage() {
         </Card>
       )}
 
-      {/* Outer view tabs: News Feed vs Trending Hashtags */}
+      {/* Press Desk stats */}
+      <div className="grid grid-cols-3 gap-4">
+        {[
+          { label: "Open queries", val: "5", tone: "text-saffron" },
+          { label: "Quotes approved today", val: "3", tone: "text-emerald-600" },
+          { label: "Coverage tracked", val: "28", tone: "text-navy" },
+        ].map(s => (
+          <Card key={s.label} className="p-4">
+            <div className="text-[10px] uppercase tracking-wider text-slate-500">{s.label}</div>
+            <div className={`text-2xl font-bold mt-1 ${s.tone}`}>{s.val}</div>
+          </Card>
+        ))}
+      </div>
+
+      {/* Outer view tabs: News Feed / Hashtags / Press Desk */}
       <Tabs defaultValue="feed">
         <TabsList>
           <TabsTrigger value="feed">News Feed</TabsTrigger>
           <TabsTrigger value="hashtags">Trending Hashtags</TabsTrigger>
+          <TabsTrigger value="press">📰 Press Desk</TabsTrigger>
         </TabsList>
+
 
         <TabsContent value="feed" className="mt-4 space-y-4">
           <Tabs value={level} onValueChange={(v) => setLevel(v as Level)}>
