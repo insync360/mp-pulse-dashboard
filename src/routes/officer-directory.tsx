@@ -30,11 +30,26 @@ const Stars = ({ n }: { n: number }) => (
 );
 
 function OfficerDirectoryPage() {
-  const { officers, departments, cases, letters, deptFiles } = useData();
+  const { officers, departments, cases, letters, deptFiles, addOfficer } = useData();
   const [q, setQ] = useState("");
   const [dept, setDept] = useState("all");
   const [juris, setJuris] = useState("all");
   const [drawer, setDrawer] = useState<Officer | null>(null);
+  const [addOpen, setAddOpen] = useState(false);
+  const [draft, setDraft] = useState({ name: "", designation: "", departmentId: "", jurisdiction: "Whitefield" as Ward | "Constituency", phone: "", email: "" });
+
+  const saveOfficer = () => {
+    if (!draft.name.trim() || !draft.departmentId) { toast.error("Name and department required"); return; }
+    const id = `OFF-${100 + officers.length}`;
+    addOfficer({
+      id, name: draft.name, designation: draft.designation || "Officer", departmentId: draft.departmentId,
+      jurisdiction: draft.jurisdiction, phone: draft.phone || "—", email: draft.email || "—",
+      tenure: `Since ${new Date().getFullYear()}`, responsiveness: 3, transferHistory: [],
+    });
+    setAddOpen(false);
+    setDraft({ name: "", designation: "", departmentId: "", jurisdiction: "Whitefield", phone: "", email: "" });
+    toast.success(`${id} added`);
+  };
 
   const jurs = Array.from(new Set(officers.map((o) => o.jurisdiction)));
 
