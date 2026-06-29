@@ -75,6 +75,10 @@ function EventLifecyclePage() {
   const [items, setItems] = useState<Ev[]>(SEED);
   const [open, setOpen] = useState<Ev | null>(null);
   const [view, setView] = useState<"kanban" | "list">("kanban");
+  const [logOpen, setLogOpen] = useState(false);
+  const [draft, setDraft] = useState<{ name: string; type: EType; date: string; location: string; organiser: string }>({
+    name: "", type: "RWA", date: new Date().toISOString().slice(0, 10), location: "", organiser: "",
+  });
 
   const stats = useMemo(() => ({
     upcoming: items.filter(e => new Date(e.date) >= new Date("2026-06-29")).length,
@@ -92,6 +96,16 @@ function EventLifecyclePage() {
     toast.success("Moved to next stage");
   };
 
+  const logEvent = () => {
+    if (!draft.name.trim()) { toast.error("Event name required"); return; }
+    const id = `EV-${2100 + items.length}`;
+    const ev: Ev = { id, ...draft, stage: "Invitation Received", photos: 0, commitments: 0 };
+    setItems(arr => [ev, ...arr]);
+    setLogOpen(false);
+    setDraft({ name: "", type: "RWA", date: new Date().toISOString().slice(0, 10), location: "", organiser: "" });
+    toast.success(`${id} logged`);
+  };
+
   return (
     <div className="p-6 space-y-6 bg-slate-50 min-h-full">
       <div className="flex items-center justify-between flex-wrap gap-3">
@@ -104,9 +118,32 @@ function EventLifecyclePage() {
             <button onClick={() => setView("kanban")} className={`px-3 py-1 text-xs font-medium rounded ${view === "kanban" ? "bg-[#0A1F44] text-white" : "text-slate-600"}`}>Kanban</button>
             <button onClick={() => setView("list")} className={`px-3 py-1 text-xs font-medium rounded ${view === "list" ? "bg-[#0A1F44] text-white" : "text-slate-600"}`}>List</button>
           </div>
-          <Button className="bg-[#FF9933] hover:bg-[#e68a2e] text-white"><Plus className="w-4 h-4" /> Log Invitation</Button>
+          <Button className="bg-[#FF9933] hover:bg-[#e68a2e] text-white" onClick={() => setLogOpen(true)}><Plus className="w-4 h-4" /> Log Event</Button>
         </div>
       </div>
+
+      <Dialog open={logOpen} onOpenChange={setLogOpen}>
+        <DialogContent>
+          <DialogHeader><DialogTitle>Log Event / Invitation</DialogTitle></DialogHeader>
+          <div className="space-y-3">
+            <Input placeholder="Event name" value={draft.name} onChange={(e) => setDraft({ ...draft, name: e.target.value })} />
+            <div className="grid grid-cols-2 gap-3">
+              <Select value={draft.type} onValueChange={(v) => setDraft({ ...draft, type: v as EType })}>
+                <SelectTrigger><SelectValue /></SelectTrigger>
+                <SelectContent>{(Object.keys(TYPE_META) as EType[]).map(t => <SelectItem key={t} value={t}>{t}</SelectItem>)}</SelectContent>
+              </Select>
+              <Input type="date" value={draft.date} onChange={(e) => setDraft({ ...draft, date: e.target.value })} />
+            </div>
+            <Input placeholder="Location" value={draft.location} onChange={(e) => setDraft({ ...draft, location: e.target.value })} />
+            <Input placeholder="Organiser" value={draft.organiser} onChange={(e) => setDraft({ ...draft, organiser: e.target.value })} />
+          </div>
+          <DialogFooter>
+            <Button variant="outline" onClick={() => setLogOpen(false)}>Cancel</Button>
+            <Button className="bg-[#FF9933] text-white" onClick={logEvent}>Log Event</Button>
+          </DialogFooter>
+        </DialogContent>
+      </Dialog>
+
 
       <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
         <StatCard label="Upcoming Events" value={stats.upcoming} icon={CalendarCheck} tone="text-[#0A1F44]" />
