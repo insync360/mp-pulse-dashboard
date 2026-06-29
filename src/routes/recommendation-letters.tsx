@@ -484,10 +484,32 @@ function LettersPage() {
           key={composer.letter?.id || composer.tmpl.id}
           tmpl={composer.tmpl}
           existing={composer.letter}
+          prefill={composer.prefill}
           onClose={() => setComposer(null)}
-          onSave={(l) => { setLetters(arr => { const idx = arr.findIndex(x => x.id === l.id); if (idx >= 0) { const cp = [...arr]; cp[idx] = l; return cp; } return [l, ...arr]; }); }}
+          onSave={(l) => {
+            setLetters(arr => { const idx = arr.findIndex(x => x.id === l.id); if (idx >= 0) { const cp = [...arr]; cp[idx] = l; return cp; } return [l, ...arr]; });
+            // Mirror into shared store so it appears on Case/Citizen/Officer/Commitment related lists
+            const p = composer.prefill;
+            if (p && (p.caseId || p.citizenId || p.officerId || p.commitmentId)) {
+              addLetter({
+                id: l.id,
+                templateType: l.templateId,
+                recipientType: "Officer",
+                caseId: p.caseId,
+                citizenId: p.citizenId,
+                officerId: p.officerId,
+                commitmentId: p.commitmentId,
+                subject: l.subject,
+                body: "",
+                status: l.status === "Pending Approval" ? "Pending Approval" : l.status as any,
+                dispatchMode: (l.mode === "Post" || l.mode === "Email" || l.mode === "WhatsApp") ? l.mode : "Hand",
+                date: new Date().toISOString().slice(0, 10),
+              });
+            }
+          }}
           onPrintEnvelope={(l) => setEnvelopeFor(l)}
         />
+
       )}
 
       {envelopeFor && <EnvelopeDialog letter={envelopeFor} onClose={() => setEnvelopeFor(null)} />}
