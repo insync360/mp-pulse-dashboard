@@ -301,3 +301,180 @@ function SocialRadarTab() {
     </div>
   );
 }
+
+// ─────────── Heatmap (governance layer) ───────────
+
+type WardCell = {
+  name: string;
+  segment: "Assembly A" | "Assembly B" | "Assembly C";
+  volume: number;
+  severity: number; // 0-100
+  topDept: string;
+  topIssue: string;
+  ageDays: number;
+  repeats: number;
+  sentiment: number; // -100..100
+};
+
+const WARDS: WardCell[] = [
+  { name: "Mahadevapura W-84", segment: "Assembly A", volume: 142, severity: 88, topDept: "BWSSB", topIssue: "Water supply", ageDays: 41, repeats: 18, sentiment: -38 },
+  { name: "KR Puram W-58", segment: "Assembly A", volume: 121, severity: 84, topDept: "BWSSB", topIssue: "Water supply", ageDays: 47, repeats: 22, sentiment: -42 },
+  { name: "Hoodi W-83", segment: "Assembly A", volume: 96, severity: 71, topDept: "BBMP", topIssue: "Stormwater drains", ageDays: 33, repeats: 11, sentiment: -18 },
+  { name: "Whitefield W-149", segment: "Assembly A", volume: 88, severity: 62, topDept: "BBMP", topIssue: "Potholes", ageDays: 22, repeats: 8, sentiment: -10 },
+  { name: "Bellandur W-150", segment: "Assembly A", volume: 74, severity: 58, topDept: "BBMP", topIssue: "Garbage", ageDays: 26, repeats: 6, sentiment: -6 },
+  { name: "CV Raman Nagar W-90", segment: "Assembly B", volume: 64, severity: 44, topDept: "BESCOM", topIssue: "Power cuts", ageDays: 18, repeats: 4, sentiment: 4 },
+  { name: "Indiranagar W-80", segment: "Assembly B", volume: 51, severity: 36, topDept: "Police (Tr.)", topIssue: "Traffic", ageDays: 12, repeats: 3, sentiment: 12 },
+  { name: "Shivajinagar W-92", segment: "Assembly B", volume: 84, severity: 67, topDept: "Revenue", topIssue: "Khata transfers", ageDays: 38, repeats: 9, sentiment: -22 },
+  { name: "Hebbal W-19", segment: "Assembly C", volume: 102, severity: 73, topDept: "BBMP", topIssue: "Flyover repair", ageDays: 29, repeats: 14, sentiment: -16 },
+  { name: "Yelahanka W-6", segment: "Assembly C", volume: 58, severity: 41, topDept: "BWSSB", topIssue: "Borewell", ageDays: 19, repeats: 5, sentiment: 8 },
+  { name: "Rajajinagar W-101", segment: "Assembly C", volume: 47, severity: 32, topDept: "BBMP", topIssue: "Parks", ageDays: 14, repeats: 2, sentiment: 18 },
+  { name: "Bommanahalli W-186", segment: "Assembly A", volume: 119, severity: 79, topDept: "BBMP", topIssue: "Flooding", ageDays: 36, repeats: 16, sentiment: -28 },
+];
+
+function HeatmapTab() {
+  const [grain, setGrain] = useState<"Ward" | "Booth" | "Taluk" | "Assembly">("Ward");
+  const [metric, setMetric] = useState<"severity" | "volume">("severity");
+  const [dept, setDept] = useState<string>("All");
+
+  const visible = WARDS.filter(w => dept === "All" || w.topDept === dept);
+
+  const heat = (v: number) => {
+    if (v >= 80) return "bg-red-600 text-white border-red-700";
+    if (v >= 65) return "bg-red-400 text-white border-red-500";
+    if (v >= 50) return "bg-orange-400 text-white border-orange-500";
+    if (v >= 35) return "bg-amber-300 text-amber-900 border-amber-400";
+    if (v >= 20) return "bg-yellow-200 text-yellow-900 border-yellow-300";
+    return "bg-emerald-200 text-emerald-900 border-emerald-300";
+  };
+
+  const mostNeglected = [...WARDS].sort((a,b) => b.ageDays - a.ageDays)[0];
+  const worstDept = "BWSSB · 263 open complaints across 4 wards";
+  const wardWaterTop = "KR Puram (W-58) — 89 open water cases";
+  const slowestOfficer = "AE M. Rajashekhar (PWD East) — avg 51d on file";
+
+  return (
+    <div className="space-y-6">
+      <Card className="p-5">
+        <div className="flex flex-wrap items-center justify-between gap-3 mb-4">
+          <div>
+            <h2 className="text-sm font-semibold text-navy flex items-center gap-2">
+              <Target className="h-4 w-4 text-saffron" /> Constituency Governance Heatmap
+            </h2>
+            <p className="text-xs text-muted-foreground mt-0.5">
+              Ground-truth office data — beneath the social listening layer.
+            </p>
+          </div>
+          <div className="flex flex-wrap items-center gap-2">
+            <div className="flex rounded-md border">
+              {(["Ward", "Booth", "Taluk", "Assembly"] as const).map(g => (
+                <button key={g} onClick={() => setGrain(g)}
+                  className={`text-xs px-2.5 py-1 ${grain === g ? "bg-navy text-white" : "text-navy"}`}>
+                  {g}
+                </button>
+              ))}
+            </div>
+            <div className="flex rounded-md border">
+              {(["severity", "volume"] as const).map(m => (
+                <button key={m} onClick={() => setMetric(m)}
+                  className={`text-xs px-2.5 py-1 capitalize ${metric === m ? "bg-saffron text-navy font-semibold" : "text-navy"}`}>
+                  {m}
+                </button>
+              ))}
+            </div>
+            <select value={dept} onChange={e => setDept(e.target.value)} className="text-xs border rounded-md h-7 px-2">
+              <option>All</option>
+              <option>BWSSB</option><option>BBMP</option><option>BESCOM</option><option>Revenue</option>
+              <option>Police (Tr.)</option>
+            </select>
+          </div>
+        </div>
+
+        {/* Heat grid */}
+        <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-2">
+          {visible.map(w => {
+            const v = metric === "severity" ? w.severity : Math.min(100, Math.round(w.volume / 1.5));
+            return (
+              <div key={w.name} className={`rounded-lg border p-3 ${heat(v)}`}>
+                <div className="flex items-start justify-between gap-2">
+                  <div className="text-[11px] font-semibold opacity-80">{w.segment}</div>
+                  <div className="text-lg font-bold tabular-nums">{v}</div>
+                </div>
+                <div className="text-sm font-bold leading-tight mt-1">{w.name}</div>
+                <div className="text-[11px] opacity-90 mt-1">{w.topIssue} · {w.topDept}</div>
+                <div className="text-[10px] opacity-80 mt-1.5 flex items-center gap-2">
+                  <span>{w.volume} cases</span>
+                  <span>·</span>
+                  <span>{w.ageDays}d avg</span>
+                  {w.repeats > 10 && <span className="bg-white/30 px-1 rounded">{w.repeats} repeats</span>}
+                </div>
+              </div>
+            );
+          })}
+        </div>
+
+        {/* Legend */}
+        <div className="mt-4 flex items-center gap-2 text-[10px]">
+          <span className="text-muted-foreground">Low</span>
+          <div className="flex">
+            <span className="w-5 h-3 bg-emerald-200" />
+            <span className="w-5 h-3 bg-yellow-200" />
+            <span className="w-5 h-3 bg-amber-300" />
+            <span className="w-5 h-3 bg-orange-400" />
+            <span className="w-5 h-3 bg-red-400" />
+            <span className="w-5 h-3 bg-red-600" />
+          </div>
+          <span className="text-muted-foreground">Critical</span>
+        </div>
+      </Card>
+
+      {/* Surfaced answers */}
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+        {[
+          { label: "Most-neglected area", val: `${mostNeglected.name} — ${mostNeglected.ageDays} days avg open`, accent: "border-l-red-500" },
+          { label: "Department causing most complaints", val: worstDept, accent: "border-l-saffron" },
+          { label: "Ward with most water complaints", val: wardWaterTop, accent: "border-l-blue-500" },
+          { label: "Officer delaying most cases", val: slowestOfficer, accent: "border-l-amber-500" },
+        ].map(s => (
+          <Card key={s.label} className={`p-4 border-l-4 ${s.accent}`}>
+            <div className="text-[10px] uppercase tracking-wider text-muted-foreground">{s.label}</div>
+            <div className="text-sm font-semibold text-navy mt-1">{s.val}</div>
+          </Card>
+        ))}
+      </div>
+    </div>
+  );
+}
+
+function IssueRadarPage() {
+  const [outer, setOuter] = useState<"radar" | "heatmap">("radar");
+  return (
+    <div className="space-y-6 p-6">
+      <div className="flex items-end justify-between flex-wrap gap-3">
+        <div>
+          <h1 className="text-2xl font-semibold tracking-tight text-foreground">Issue Radar</h1>
+          <p className="text-sm text-muted-foreground">
+            Social listening on top — governance heatmap underneath. Two lenses, one picture.
+          </p>
+        </div>
+        <div className="flex items-center gap-2 text-xs text-muted-foreground">
+          <span className="h-1.5 w-1.5 rounded-full bg-emerald-500 animate-pulse" />
+          Updated 2 min ago
+        </div>
+      </div>
+
+      <Tabs value={outer} onValueChange={(v) => setOuter(v as "radar" | "heatmap")}>
+        <TabsList>
+          <TabsTrigger value="radar">📡 Social Radar</TabsTrigger>
+          <TabsTrigger value="heatmap">🗺 Governance Heatmap</TabsTrigger>
+        </TabsList>
+        <TabsContent value="radar" className="mt-4">
+          <SocialRadarTab />
+        </TabsContent>
+        <TabsContent value="heatmap" className="mt-4">
+          <HeatmapTab />
+        </TabsContent>
+      </Tabs>
+    </div>
+  );
+}
+
