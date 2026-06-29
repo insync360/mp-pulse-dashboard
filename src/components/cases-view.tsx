@@ -289,10 +289,12 @@ function Kpi({ label, value, icon: Icon, tone }: { label: string; value: number;
 }
 
 function CaseDetail({ c }: { c: Case }) {
+  const navigate = useNavigate();
   const {
     getCitizen, getOfficer, letters, commitments, departments, deptFiles,
     attachments, tasks, updateCase, staff, setLetterDraft,
   } = useData();
+
   const citizen = getCitizen(c.citizenId);
   const officer = c.officerId ? getOfficer(c.officerId) : undefined;
   const dept = c.departmentId ? departments.find((d) => d.id === c.departmentId) : undefined;
