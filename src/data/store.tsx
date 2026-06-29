@@ -49,7 +49,7 @@ export function DataProvider({ children }: { children: ReactNode }) {
     getCommitment: (id) => state.commitments.find((c) => c.id === id),
     updateCase: (id, patch) =>
       setState((s) => ({ ...s, cases: s.cases.map((c) => (c.id === id ? { ...c, ...patch } : c)) })),
-    addCase: (c) => setState((s) => ({ ...s, cases: [c, ...s.cases] })),
+    addCase: (c) => { setState((s) => ({ ...s, cases: [c, ...s.cases] })); return c; },
     addLetter: (l) => {
       setState((s) => ({ ...s, letters: [l, ...s.letters] }));
       return l;
