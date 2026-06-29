@@ -40,6 +40,7 @@ import { Route as DailyBriefingRouteImport } from './routes/daily-briefing'
 import { Route as CommitmentTrackerRouteImport } from './routes/commitment-tracker'
 import { Route as ClosureVerificationRouteImport } from './routes/closure-verification'
 import { Route as CitizenDatabaseRouteImport } from './routes/citizen-database'
+import { Route as CasesRouteImport } from './routes/cases'
 import { Route as CalendarRouteImport } from './routes/calendar'
 import { Route as BroadcastsRouteImport } from './routes/broadcasts'
 import { Route as BriefingsSpeechesRouteImport } from './routes/briefings-speeches'
@@ -202,6 +203,11 @@ const CitizenDatabaseRoute = CitizenDatabaseRouteImport.update({
   path: '/citizen-database',
   getParentRoute: () => rootRouteImport,
 } as any)
+const CasesRoute = CasesRouteImport.update({
+  id: '/cases',
+  path: '/cases',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const CalendarRoute = CalendarRouteImport.update({
   id: '/calendar',
   path: '/calendar',
@@ -240,6 +246,7 @@ export interface FileRoutesByFullPath {
   '/briefings-speeches': typeof BriefingsSpeechesRoute
   '/broadcasts': typeof BroadcastsRoute
   '/calendar': typeof CalendarRoute
+  '/cases': typeof CasesRoute
   '/citizen-database': typeof CitizenDatabaseRoute
   '/closure-verification': typeof ClosureVerificationRoute
   '/commitment-tracker': typeof CommitmentTrackerRoute
@@ -279,6 +286,7 @@ export interface FileRoutesByTo {
   '/briefings-speeches': typeof BriefingsSpeechesRoute
   '/broadcasts': typeof BroadcastsRoute
   '/calendar': typeof CalendarRoute
+  '/cases': typeof CasesRoute
   '/citizen-database': typeof CitizenDatabaseRoute
   '/closure-verification': typeof ClosureVerificationRoute
   '/commitment-tracker': typeof CommitmentTrackerRoute
@@ -319,6 +327,7 @@ export interface FileRoutesById {
   '/briefings-speeches': typeof BriefingsSpeechesRoute
   '/broadcasts': typeof BroadcastsRoute
   '/calendar': typeof CalendarRoute
+  '/cases': typeof CasesRoute
   '/citizen-database': typeof CitizenDatabaseRoute
   '/closure-verification': typeof ClosureVerificationRoute
   '/commitment-tracker': typeof CommitmentTrackerRoute
@@ -360,6 +369,7 @@ export interface FileRouteTypes {
     | '/briefings-speeches'
     | '/broadcasts'
     | '/calendar'
+    | '/cases'
     | '/citizen-database'
     | '/closure-verification'
     | '/commitment-tracker'
@@ -399,6 +409,7 @@ export interface FileRouteTypes {
     | '/briefings-speeches'
     | '/broadcasts'
     | '/calendar'
+    | '/cases'
     | '/citizen-database'
     | '/closure-verification'
     | '/commitment-tracker'
@@ -438,6 +449,7 @@ export interface FileRouteTypes {
     | '/briefings-speeches'
     | '/broadcasts'
     | '/calendar'
+    | '/cases'
     | '/citizen-database'
     | '/closure-verification'
     | '/commitment-tracker'
@@ -478,6 +490,7 @@ export interface RootRouteChildren {
   BriefingsSpeechesRoute: typeof BriefingsSpeechesRoute
   BroadcastsRoute: typeof BroadcastsRoute
   CalendarRoute: typeof CalendarRoute
+  CasesRoute: typeof CasesRoute
   CitizenDatabaseRoute: typeof CitizenDatabaseRoute
   ClosureVerificationRoute: typeof ClosureVerificationRoute
   CommitmentTrackerRoute: typeof CommitmentTrackerRoute
@@ -730,6 +743,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof CitizenDatabaseRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/cases': {
+      id: '/cases'
+      path: '/cases'
+      fullPath: '/cases'
+      preLoaderRoute: typeof CasesRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/calendar': {
       id: '/calendar'
       path: '/calendar'
@@ -782,6 +802,7 @@ const rootRouteChildren: RootRouteChildren = {
   BriefingsSpeechesRoute: BriefingsSpeechesRoute,
   BroadcastsRoute: BroadcastsRoute,
   CalendarRoute: CalendarRoute,
+  CasesRoute: CasesRoute,
   CitizenDatabaseRoute: CitizenDatabaseRoute,
   ClosureVerificationRoute: ClosureVerificationRoute,
   CommitmentTrackerRoute: CommitmentTrackerRoute,
