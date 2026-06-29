@@ -190,12 +190,18 @@ function DailyBriefing() {
     },
   ]);
 
+  const { cases, letters } = useData();
+  const liveOpen = cases.filter((c) => ["New","Assigned","In Progress","Action Taken","Reopened"].includes(c.status)).length;
+  const liveResolved = cases.filter((c) => c.status === "Resolved").length;
+  const liveBreached = cases.filter((c) => ["New","Assigned","In Progress","Action Taken","Reopened"].includes(c.status) && new Date(c.slaDue).getTime() < Date.now()).length;
+  const liveLettersAwaiting = letters.filter((l) => l.status === "Draft" || l.status === "Approved").length;
+
   const [pulse, setPulse] = useState({
     visitors: 42,
-    grievOpen: 18,
-    grievClosed: 11,
-    sla: 3,
-    letters: 5,
+    grievOpen: liveOpen,
+    grievClosed: liveResolved,
+    sla: liveBreached,
+    letters: liveLettersAwaiting,
     touchpoints: 4,
     funds: "₹6.3 Cr",
   });
