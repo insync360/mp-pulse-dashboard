@@ -1,218 +1,132 @@
-import { createFileRoute } from "@tanstack/react-router";
+import { createFileRoute, Link } from "@tanstack/react-router";
 import { useMemo, useState } from "react";
 import {
-  Archive,
-  Search,
-  Upload,
-  FileText,
-  Image as ImageIcon,
-  Link2,
-  Lock,
-  AlertTriangle,
-  Grid3x3,
-  List as ListIcon,
-  History,
-  ScanLine,
+  FolderOpen, Search, FileText, ImageIcon, FileArchive, FileType,
+  ShieldAlert, Paperclip,
 } from "lucide-react";
 import { Card } from "@/components/ui/card";
-import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Input } from "@/components/ui/input";
-import { cn } from "@/lib/utils";
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
+import { useData } from "@/data/store";
+import type { AttachableRecord } from "@/data/types";
+import { formatDate } from "@/data/selectors";
 
 export const Route = createFileRoute("/document-vault")({
   head: () => ({ meta: [{ title: "Document Vault — Citizen Pulse" }] }),
   component: DocumentVaultPage,
 });
 
-interface Doc {
-  id: string;
-  name: string;
-  type: string;
-  linkedTo: string;
-  uploadedBy: string;
-  date: string;
-  size: string;
-  expiry?: string;
-  sensitive?: boolean;
-  versions: number;
-}
+const KIND_ICON = {
+  PDF: FileText, Image: ImageIcon, DOCX: FileType, ZIP: FileArchive, Other: Paperclip,
+} as const;
 
-const DOC_TYPES = [
-  "All", "Application", "ID Proof", "Medical", "Land", "Estimate",
-  "Tender", "Work Order", "Completion Cert.", "Dept Reply", "Letter", "RTI Reply", "Court/Police",
-];
-
-const DOCS: Doc[] = [
-  { id: "D-4210", name: "Aadhaar — Lakshmi N (widow pension).pdf", type: "ID Proof", linkedTo: "Citizen #C-1872", uploadedBy: "Ramya", date: "Today", size: "412 KB", versions: 1, sensitive: true },
-  { id: "D-4209", name: "KR Puram drainage estimate — PWD.pdf", type: "Estimate", linkedTo: "File #PWD-2289", uploadedBy: "Suresh", date: "Today", size: "2.1 MB", versions: 2 },
-  { id: "D-4208", name: "BBMP letter — Hebbal flyover repairs.pdf", type: "Dept Reply", linkedTo: "Grievance #G-1124", uploadedBy: "Mohan", date: "Yesterday", size: "318 KB", versions: 1 },
-  { id: "D-4207", name: "Site photos — Mahadevapura drains.zip", type: "Application", linkedTo: "Demand #DM-204", uploadedBy: "Field Vol.", date: "Yesterday", size: "8.4 MB", versions: 1 },
-  { id: "D-4206", name: "Recommendation — St Mary's CBSE.docx", type: "Letter", linkedTo: "Letter #L-2207", uploadedBy: "Ramya", date: "2 d ago", size: "94 KB", versions: 3 },
-  { id: "D-4205", name: "RTI reply — Mahadayi project.pdf", type: "RTI Reply", linkedTo: "Research", uploadedBy: "Anjali", date: "3 d ago", size: "1.8 MB", versions: 1, expiry: "Reply window 12 d" },
-  { id: "D-4204", name: "Work order — Yelahanka borewell.pdf", type: "Work Order", linkedTo: "Project #MPL-0419", uploadedBy: "Mohan", date: "4 d ago", size: "640 KB", versions: 1 },
-  { id: "D-4203", name: "Medical bills — Praveen K.pdf", type: "Medical", linkedTo: "Case #G-1089", uploadedBy: "Deepa", date: "5 d ago", size: "1.2 MB", versions: 1, sensitive: true },
-  { id: "D-4202", name: "Khata extract — Bommanahalli plot.pdf", type: "Land", linkedTo: "Citizen #C-1654", uploadedBy: "Adv. Vinay", date: "6 d ago", size: "780 KB", versions: 2 },
-  { id: "D-4201", name: "Completion cert — Smart City lights.pdf", type: "Completion Cert.", linkedTo: "Project #SC-118", uploadedBy: "Suresh", date: "1 wk ago", size: "510 KB", versions: 1 },
-  { id: "D-4200", name: "Police case copy — Shivajinagar.pdf", type: "Court/Police", linkedTo: "Case #G-1066", uploadedBy: "Adv. Vinay", date: "1 wk ago", size: "920 KB", versions: 1, sensitive: true },
-  { id: "D-4199", name: "Tender notice — Lake rejuvenation.pdf", type: "Tender", linkedTo: "Project #LK-008", uploadedBy: "Mohan", date: "2 wk ago", size: "1.5 MB", versions: 1, expiry: "Closes in 6 d" },
-];
+const recordRoute: Record<AttachableRecord, string> = {
+  Case: "/cases",
+  Citizen: "/citizen-database",
+  Officer: "/officer-directory",
+  Letter: "/recommendation-letters",
+  Commitment: "/commitment-tracker",
+  Event: "/event-lifecycle",
+  Project: "/funds-and-projects",
+  Demand: "/development-demand-bank",
+  DeptFile: "/department-files",
+  Organisation: "/stakeholder-crm",
+};
 
 function DocumentVaultPage() {
-  const [view, setView] = useState<"grid" | "list">("list");
-  const [type, setType] = useState("All");
-  const [query, setQuery] = useState("");
+  const { attachments, getCitizen, getOfficer, getCase, letters } = useData();
+  const [q, setQ] = useState("");
+  const [kind, setKind] = useState<string>("all");
+  const [scope, setScope] = useState<string>("all");
 
-  const docs = useMemo(
-    () =>
-      DOCS.filter((d) => type === "All" || d.type === type).filter((d) =>
-        query
-          ? d.name.toLowerCase().includes(query.toLowerCase()) ||
-            d.linkedTo.toLowerCase().includes(query.toLowerCase())
-          : true,
-      ),
-    [type, query],
-  );
+  const visible = useMemo(() => {
+    const ql = q.trim().toLowerCase();
+    return attachments.filter((a) => {
+      if (kind !== "all" && a.kind !== kind) return false;
+      if (scope !== "all" && a.recordType !== scope) return false;
+      if (!ql) return true;
+      return [a.name, a.uploadedBy, a.recordId].join(" ").toLowerCase().includes(ql);
+    });
+  }, [attachments, q, kind, scope]);
+
+  const labelFor = (a: typeof attachments[number]) => {
+    switch (a.recordType) {
+      case "Citizen": return getCitizen(a.recordId)?.name ?? a.recordId;
+      case "Officer": return getOfficer(a.recordId)?.name ?? a.recordId;
+      case "Case": return getCase(a.recordId)?.description?.slice(0, 60) ?? a.recordId;
+      case "Letter": return letters.find((l) => l.id === a.recordId)?.subject ?? a.recordId;
+      default: return a.recordId;
+    }
+  };
 
   return (
-    <div className="p-4 md:p-6 lg:p-8 max-w-[1500px] mx-auto">
-      <div className="mb-6 flex items-end justify-between gap-4 flex-wrap">
-        <div>
-          <div className="flex items-center gap-2">
-            <Archive className="h-5 w-5 text-saffron" />
-            <h1 className="text-2xl font-bold tracking-tight text-navy">Document Vault</h1>
-          </div>
-          <p className="text-sm text-muted-foreground mt-1">
-            One source of truth — every doc linked to a citizen, case, project, event or officer.
-          </p>
-        </div>
-        <Button className="bg-navy text-white hover:bg-navy/90">
-          <Upload className="h-4 w-4" /> Upload / Scan
-        </Button>
+    <div className="p-4 md:p-6 lg:p-8 max-w-[1300px] mx-auto">
+      <div className="flex items-center gap-2 mb-2">
+        <FolderOpen className="h-5 w-5 text-saffron" />
+        <h1 className="text-2xl font-bold text-navy">Document Vault</h1>
       </div>
+      <p className="text-sm text-muted-foreground mb-6">
+        Global search across every attachment uploaded on a Case, Citizen, Officer, Letter or Project.
+      </p>
 
-      <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mb-6">
-        <Stat label="Documents" value="4,210" icon={FileText} />
-        <Stat label="Linked to records" value="88%" icon={Link2} tone="text-emerald-600" />
-        <Stat label="Expiring soon" value="12" icon={AlertTriangle} tone="text-saffron" />
-        <Stat label="Sensitive (restricted)" value="186" icon={Lock} tone="text-red-600" />
-      </div>
-
-      <Card className="p-4 mb-4">
-        <div className="flex flex-wrap items-center gap-3">
-          <div className="relative flex-1 min-w-[260px]">
-            <Search className="absolute left-2.5 top-2.5 h-4 w-4 text-muted-foreground" />
-            <Input
-              className="pl-8"
-              placeholder="Search by name, mobile, doc type, citizen, file no…"
-              value={query}
-              onChange={(e) => setQuery(e.target.value)}
-            />
-          </div>
-          <Button variant="outline" size="sm"><ScanLine className="h-4 w-4" /> OCR search</Button>
-          <div className="flex rounded-md border">
-            <button
-              onClick={() => setView("list")}
-              className={cn("px-2.5 py-1.5", view === "list" ? "bg-navy text-white" : "text-navy")}
-            >
-              <ListIcon className="h-4 w-4" />
-            </button>
-            <button
-              onClick={() => setView("grid")}
-              className={cn("px-2.5 py-1.5", view === "grid" ? "bg-navy text-white" : "text-navy")}
-            >
-              <Grid3x3 className="h-4 w-4" />
-            </button>
-          </div>
+      <Card className="p-4 mb-4 flex flex-wrap items-center gap-3">
+        <div className="relative flex-1 min-w-[240px]">
+          <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
+          <Input className="pl-9 h-9" placeholder="Search filename, uploader, record id…" value={q} onChange={(e) => setQ(e.target.value)} />
         </div>
-        <div className="mt-3 flex flex-wrap gap-1.5">
-          {DOC_TYPES.map((t) => (
-            <button
-              key={t}
-              onClick={() => setType(t)}
-              className={cn(
-                "text-xs px-2.5 py-1 rounded-full border",
-                type === t ? "bg-saffron text-navy border-saffron font-semibold" : "bg-white text-navy border-border hover:bg-slate-50",
-              )}
-            >
-              {t}
-            </button>
-          ))}
-        </div>
+        <Select value={kind} onValueChange={setKind}>
+          <SelectTrigger className="w-[140px] h-9"><SelectValue placeholder="Type" /></SelectTrigger>
+          <SelectContent>
+            <SelectItem value="all">All types</SelectItem>
+            {["PDF", "Image", "DOCX", "ZIP", "Other"].map((k) => <SelectItem key={k} value={k}>{k}</SelectItem>)}
+          </SelectContent>
+        </Select>
+        <Select value={scope} onValueChange={setScope}>
+          <SelectTrigger className="w-[180px] h-9"><SelectValue placeholder="Attached to" /></SelectTrigger>
+          <SelectContent>
+            <SelectItem value="all">All record types</SelectItem>
+            {Object.keys(recordRoute).map((k) => <SelectItem key={k} value={k}>{k}</SelectItem>)}
+          </SelectContent>
+        </Select>
+        <div className="text-xs text-muted-foreground ml-auto">{visible.length} of {attachments.length} files</div>
       </Card>
 
-      {view === "list" ? (
-        <Card className="overflow-hidden">
-          <table className="w-full text-sm">
-            <thead className="bg-slate-50 text-xs uppercase tracking-wider text-muted-foreground">
-              <tr>
-                <th className="text-left px-4 py-2.5">Document</th>
-                <th className="text-left px-4 py-2.5">Type</th>
-                <th className="text-left px-4 py-2.5">Linked to</th>
-                <th className="text-left px-4 py-2.5">Uploaded</th>
-                <th className="text-left px-4 py-2.5">Flags</th>
-                <th className="text-left px-4 py-2.5">Versions</th>
-              </tr>
-            </thead>
-            <tbody>
-              {docs.map((d) => (
-                <tr key={d.id} className="border-t hover:bg-slate-50/50">
-                  <td className="px-4 py-3">
-                    <div className="font-medium text-navy">{d.name}</div>
-                    <div className="text-xs text-muted-foreground">{d.id} · {d.size}</div>
-                  </td>
-                  <td className="px-4 py-3"><Badge variant="outline" className="text-xs">{d.type}</Badge></td>
-                  <td className="px-4 py-3 text-xs"><Link2 className="h-3 w-3 inline mr-1 text-saffron" />{d.linkedTo}</td>
-                  <td className="px-4 py-3 text-xs">
-                    <div>{d.uploadedBy}</div>
-                    <div className="text-muted-foreground">{d.date}</div>
-                  </td>
-                  <td className="px-4 py-3">
-                    <div className="flex flex-wrap gap-1">
-                      {d.sensitive && <Badge className="bg-red-50 text-red-700 border border-red-200 text-[10px]"><Lock className="h-3 w-3 mr-0.5" /> Sensitive</Badge>}
-                      {d.expiry && <Badge className="bg-amber-50 text-amber-800 border border-amber-200 text-[10px]">{d.expiry}</Badge>}
-                    </div>
-                  </td>
-                  <td className="px-4 py-3 text-xs text-muted-foreground inline-flex items-center gap-1">
-                    <History className="h-3 w-3" /> v{d.versions}
-                  </td>
-                </tr>
-              ))}
-            </tbody>
-          </table>
-        </Card>
-      ) : (
-        <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-3">
-          {docs.map((d) => (
-            <Card key={d.id} className="p-4">
-              <div className="h-24 rounded bg-slate-100 flex items-center justify-center mb-3">
-                {d.type === "Application" ? <ImageIcon className="h-8 w-8 text-slate-400" /> : <FileText className="h-8 w-8 text-slate-400" />}
+      <Card>
+        <div className="divide-y">
+          {visible.map((a) => {
+            const Icon = KIND_ICON[a.kind] ?? Paperclip;
+            return (
+              <div key={a.id} className="flex items-center gap-3 px-4 py-3 hover:bg-muted/40">
+                <div className="h-9 w-9 rounded bg-muted flex items-center justify-center text-navy">
+                  <Icon className="h-4 w-4" />
+                </div>
+                <div className="min-w-0 flex-1">
+                  <div className="flex items-center gap-2 flex-wrap">
+                    <span className="font-medium text-navy truncate">{a.name}</span>
+                    {a.sensitive && (
+                      <Badge className="bg-red-100 text-red-700 border-red-200 text-[10px] gap-1">
+                        <ShieldAlert className="h-2.5 w-2.5" /> sensitive
+                      </Badge>
+                    )}
+                  </div>
+                  <div className="text-xs text-muted-foreground">
+                    {a.kind} · {a.size} · uploaded by {a.uploadedBy} · {formatDate(a.uploadedAt)}
+                  </div>
+                </div>
+                <Link to={recordRoute[a.recordType]}>
+                  <Badge variant="outline" className="text-[10px] cursor-pointer hover:bg-saffron/10">
+                    {a.recordType}: {labelFor(a).toString().slice(0, 36)}
+                  </Badge>
+                </Link>
               </div>
-              <div className="text-sm font-medium text-navy line-clamp-2">{d.name}</div>
-              <div className="text-xs text-muted-foreground mt-1">{d.type} · {d.size}</div>
-              <div className="text-xs text-muted-foreground mt-0.5"><Link2 className="h-3 w-3 inline" /> {d.linkedTo}</div>
-              <div className="mt-2 flex flex-wrap gap-1">
-                {d.sensitive && <Badge className="bg-red-50 text-red-700 border border-red-200 text-[10px]"><Lock className="h-3 w-3" /></Badge>}
-                {d.expiry && <Badge className="bg-amber-50 text-amber-800 border border-amber-200 text-[10px]">{d.expiry}</Badge>}
-              </div>
-            </Card>
-          ))}
+            );
+          })}
+          {visible.length === 0 && (
+            <div className="p-8 text-center text-sm text-muted-foreground">No matching files.</div>
+          )}
         </div>
-      )}
+      </Card>
     </div>
-  );
-}
-
-function Stat({ label, value, icon: Icon, tone = "text-navy" }: { label: string; value: string; icon: typeof FileText; tone?: string }) {
-  return (
-    <Card className="p-4">
-      <div className="flex items-start justify-between">
-        <div>
-          <div className="text-xs uppercase tracking-wider text-muted-foreground">{label}</div>
-          <div className={cn("text-2xl font-bold mt-1", tone)}>{value}</div>
-        </div>
-        <Icon className={cn("h-5 w-5", tone)} />
-      </div>
-    </Card>
   );
 }
