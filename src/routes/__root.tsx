@@ -14,6 +14,7 @@ import { reportLovableError } from "../lib/lovable-error-reporting";
 import { SidebarProvider } from "@/components/ui/sidebar";
 import { AppSidebar } from "@/components/app-sidebar";
 import { AppHeader } from "@/components/app-header";
+import { DataProvider } from "@/data/store";
 
 function NotFoundComponent() {
   return (
@@ -122,17 +123,19 @@ function RootComponent() {
 
   return (
     <QueryClientProvider client={queryClient}>
-      <SidebarProvider>
-        <div className="min-h-screen flex w-full bg-background">
-          <AppSidebar />
-          <div className="flex-1 flex flex-col min-w-0">
-            <AppHeader />
-            <main className="flex-1">
-              <Outlet />
-            </main>
+      <DataProvider>
+        <SidebarProvider>
+          <div className="min-h-screen flex w-full bg-background">
+            <AppSidebar />
+            <div className="flex-1 flex flex-col min-w-0">
+              <AppHeader />
+              <main className="flex-1">
+                <Outlet />
+              </main>
+            </div>
           </div>
-        </div>
-      </SidebarProvider>
+        </SidebarProvider>
+      </DataProvider>
     </QueryClientProvider>
   );
 }
