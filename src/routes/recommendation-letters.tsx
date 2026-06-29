@@ -535,14 +535,16 @@ function LettersPage() {
 // ──────────────────────────────────────────────────────────────────────────
 function genRef() { return `CP/LTR/2026/0${Math.floor(Math.random() * 90) + 248}`; }
 
-function ComposerDialog({ tmpl, existing, onClose, onSave, onPrintEnvelope }: {
-  tmpl: Template; existing?: Letter; onClose: () => void; onSave: (l: Letter) => void; onPrintEnvelope: (l: Letter) => void;
+function ComposerDialog({ tmpl, existing, prefill, onClose, onSave, onPrintEnvelope }: {
+  tmpl: Template; existing?: Letter; prefill?: LetterDraftPrefill;
+  onClose: () => void; onSave: (l: Letter) => void; onPrintEnvelope: (l: Letter) => void;
 }) {
   const [recipient, setRecipient] = useState({
-    name: existing?.recipient || "",
-    designation: tmpl.recipientType,
-    office: "",
-    address: "",
+    name: existing?.recipient || prefill?.recipientName || "",
+    designation: prefill?.recipientDesignation || tmpl.recipientType,
+    office: prefill?.recipientOffice || "",
+    address: prefill?.recipientAddress || "",
+
   });
   const [subject, setSubject] = useState(existing?.subject || tmpl.subject);
   const [fields, setFields] = useState<Record<string, string>>(existing?.fields || {});
