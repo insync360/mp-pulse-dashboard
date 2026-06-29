@@ -64,17 +64,19 @@ const sections: NavSection[] = [
     items: [
       { title: "Command Center", url: "/", icon: Gauge },
       { title: "Daily Briefing", url: "/daily-briefing", icon: Sun, badge: 5 },
-      { title: "Unified Inbox", url: "/unified-inbox", icon: Inbox },
+      { title: "Inbox", url: "/inbox", icon: Inbox },
       { title: "Approvals", url: "/approvals", icon: CheckSquare },
     ],
   },
   {
     label: "Citizen Service",
     items: [
-      { title: "Grievances", url: "/grievances", icon: ClipboardList, badge: 3 },
-      { title: "Scheme Assistance", url: "/scheme-assistance", icon: HandHelping },
+      { title: "Cases", url: "/cases", icon: ClipboardList, badge: 3 },
+      { title: "Grievances", url: "/grievances", icon: ClipboardList },
+      { title: "Scheme Requests", url: "/scheme-assistance", icon: HandHelping },
+      { title: "Emergencies", url: "/emergency-desk", icon: Siren },
+      { title: "Awaiting Closure", url: "/closure-verification", icon: ShieldCheck },
       { title: "Visitors & Outcomes", url: "/visitors", icon: Users },
-      { title: "Closure Verification", url: "/closure-verification", icon: ShieldCheck },
     ],
   },
   {
@@ -131,7 +133,6 @@ const sections: NavSection[] = [
       { title: "Staff Tasks", url: "/staff-tasks", icon: ListTodo },
       { title: "Document Vault", url: "/document-vault", icon: Archive },
       { title: "Knowledge Base", url: "/knowledge-base", icon: BookOpen },
-      { title: "Emergency Desk", url: "/emergency-desk", icon: Siren },
       { title: "Briefings & Speeches", url: "/briefings-speeches", icon: Mic },
       { title: "Settings & Team", url: "/settings-team", icon: Settings },
     ],

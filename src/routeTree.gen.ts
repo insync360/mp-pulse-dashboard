@@ -29,6 +29,7 @@ import { Route as MediaWatchRouteImport } from './routes/media-watch'
 import { Route as LocalBodyMeetingsRouteImport } from './routes/local-body-meetings'
 import { Route as KnowledgeBaseRouteImport } from './routes/knowledge-base'
 import { Route as IssueRadarRouteImport } from './routes/issue-radar'
+import { Route as InboxRouteImport } from './routes/inbox'
 import { Route as GrievancesRouteImport } from './routes/grievances'
 import { Route as FundsProjectsRouteImport } from './routes/funds-projects'
 import { Route as EventLifecycleRouteImport } from './routes/event-lifecycle'
@@ -40,6 +41,7 @@ import { Route as DailyBriefingRouteImport } from './routes/daily-briefing'
 import { Route as CommitmentTrackerRouteImport } from './routes/commitment-tracker'
 import { Route as ClosureVerificationRouteImport } from './routes/closure-verification'
 import { Route as CitizenDatabaseRouteImport } from './routes/citizen-database'
+import { Route as CasesRouteImport } from './routes/cases'
 import { Route as CalendarRouteImport } from './routes/calendar'
 import { Route as BroadcastsRouteImport } from './routes/broadcasts'
 import { Route as BriefingsSpeechesRouteImport } from './routes/briefings-speeches'
@@ -147,6 +149,11 @@ const IssueRadarRoute = IssueRadarRouteImport.update({
   path: '/issue-radar',
   getParentRoute: () => rootRouteImport,
 } as any)
+const InboxRoute = InboxRouteImport.update({
+  id: '/inbox',
+  path: '/inbox',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const GrievancesRoute = GrievancesRouteImport.update({
   id: '/grievances',
   path: '/grievances',
@@ -202,6 +209,11 @@ const CitizenDatabaseRoute = CitizenDatabaseRouteImport.update({
   path: '/citizen-database',
   getParentRoute: () => rootRouteImport,
 } as any)
+const CasesRoute = CasesRouteImport.update({
+  id: '/cases',
+  path: '/cases',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const CalendarRoute = CalendarRouteImport.update({
   id: '/calendar',
   path: '/calendar',
@@ -240,6 +252,7 @@ export interface FileRoutesByFullPath {
   '/briefings-speeches': typeof BriefingsSpeechesRoute
   '/broadcasts': typeof BroadcastsRoute
   '/calendar': typeof CalendarRoute
+  '/cases': typeof CasesRoute
   '/citizen-database': typeof CitizenDatabaseRoute
   '/closure-verification': typeof ClosureVerificationRoute
   '/commitment-tracker': typeof CommitmentTrackerRoute
@@ -251,6 +264,7 @@ export interface FileRoutesByFullPath {
   '/event-lifecycle': typeof EventLifecycleRoute
   '/funds-projects': typeof FundsProjectsRoute
   '/grievances': typeof GrievancesRoute
+  '/inbox': typeof InboxRoute
   '/issue-radar': typeof IssueRadarRoute
   '/knowledge-base': typeof KnowledgeBaseRoute
   '/local-body-meetings': typeof LocalBodyMeetingsRoute
@@ -279,6 +293,7 @@ export interface FileRoutesByTo {
   '/briefings-speeches': typeof BriefingsSpeechesRoute
   '/broadcasts': typeof BroadcastsRoute
   '/calendar': typeof CalendarRoute
+  '/cases': typeof CasesRoute
   '/citizen-database': typeof CitizenDatabaseRoute
   '/closure-verification': typeof ClosureVerificationRoute
   '/commitment-tracker': typeof CommitmentTrackerRoute
@@ -290,6 +305,7 @@ export interface FileRoutesByTo {
   '/event-lifecycle': typeof EventLifecycleRoute
   '/funds-projects': typeof FundsProjectsRoute
   '/grievances': typeof GrievancesRoute
+  '/inbox': typeof InboxRoute
   '/issue-radar': typeof IssueRadarRoute
   '/knowledge-base': typeof KnowledgeBaseRoute
   '/local-body-meetings': typeof LocalBodyMeetingsRoute
@@ -319,6 +335,7 @@ export interface FileRoutesById {
   '/briefings-speeches': typeof BriefingsSpeechesRoute
   '/broadcasts': typeof BroadcastsRoute
   '/calendar': typeof CalendarRoute
+  '/cases': typeof CasesRoute
   '/citizen-database': typeof CitizenDatabaseRoute
   '/closure-verification': typeof ClosureVerificationRoute
   '/commitment-tracker': typeof CommitmentTrackerRoute
@@ -330,6 +347,7 @@ export interface FileRoutesById {
   '/event-lifecycle': typeof EventLifecycleRoute
   '/funds-projects': typeof FundsProjectsRoute
   '/grievances': typeof GrievancesRoute
+  '/inbox': typeof InboxRoute
   '/issue-radar': typeof IssueRadarRoute
   '/knowledge-base': typeof KnowledgeBaseRoute
   '/local-body-meetings': typeof LocalBodyMeetingsRoute
@@ -360,6 +378,7 @@ export interface FileRouteTypes {
     | '/briefings-speeches'
     | '/broadcasts'
     | '/calendar'
+    | '/cases'
     | '/citizen-database'
     | '/closure-verification'
     | '/commitment-tracker'
@@ -371,6 +390,7 @@ export interface FileRouteTypes {
     | '/event-lifecycle'
     | '/funds-projects'
     | '/grievances'
+    | '/inbox'
     | '/issue-radar'
     | '/knowledge-base'
     | '/local-body-meetings'
@@ -399,6 +419,7 @@ export interface FileRouteTypes {
     | '/briefings-speeches'
     | '/broadcasts'
     | '/calendar'
+    | '/cases'
     | '/citizen-database'
     | '/closure-verification'
     | '/commitment-tracker'
@@ -410,6 +431,7 @@ export interface FileRouteTypes {
     | '/event-lifecycle'
     | '/funds-projects'
     | '/grievances'
+    | '/inbox'
     | '/issue-radar'
     | '/knowledge-base'
     | '/local-body-meetings'
@@ -438,6 +460,7 @@ export interface FileRouteTypes {
     | '/briefings-speeches'
     | '/broadcasts'
     | '/calendar'
+    | '/cases'
     | '/citizen-database'
     | '/closure-verification'
     | '/commitment-tracker'
@@ -449,6 +472,7 @@ export interface FileRouteTypes {
     | '/event-lifecycle'
     | '/funds-projects'
     | '/grievances'
+    | '/inbox'
     | '/issue-radar'
     | '/knowledge-base'
     | '/local-body-meetings'
@@ -478,6 +502,7 @@ export interface RootRouteChildren {
   BriefingsSpeechesRoute: typeof BriefingsSpeechesRoute
   BroadcastsRoute: typeof BroadcastsRoute
   CalendarRoute: typeof CalendarRoute
+  CasesRoute: typeof CasesRoute
   CitizenDatabaseRoute: typeof CitizenDatabaseRoute
   ClosureVerificationRoute: typeof ClosureVerificationRoute
   CommitmentTrackerRoute: typeof CommitmentTrackerRoute
@@ -489,6 +514,7 @@ export interface RootRouteChildren {
   EventLifecycleRoute: typeof EventLifecycleRoute
   FundsProjectsRoute: typeof FundsProjectsRoute
   GrievancesRoute: typeof GrievancesRoute
+  InboxRoute: typeof InboxRoute
   IssueRadarRoute: typeof IssueRadarRoute
   KnowledgeBaseRoute: typeof KnowledgeBaseRoute
   LocalBodyMeetingsRoute: typeof LocalBodyMeetingsRoute
@@ -653,6 +679,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof IssueRadarRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/inbox': {
+      id: '/inbox'
+      path: '/inbox'
+      fullPath: '/inbox'
+      preLoaderRoute: typeof InboxRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/grievances': {
       id: '/grievances'
       path: '/grievances'
@@ -730,6 +763,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof CitizenDatabaseRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/cases': {
+      id: '/cases'
+      path: '/cases'
+      fullPath: '/cases'
+      preLoaderRoute: typeof CasesRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/calendar': {
       id: '/calendar'
       path: '/calendar'
@@ -782,6 +822,7 @@ const rootRouteChildren: RootRouteChildren = {
   BriefingsSpeechesRoute: BriefingsSpeechesRoute,
   BroadcastsRoute: BroadcastsRoute,
   CalendarRoute: CalendarRoute,
+  CasesRoute: CasesRoute,
   CitizenDatabaseRoute: CitizenDatabaseRoute,
   ClosureVerificationRoute: ClosureVerificationRoute,
   CommitmentTrackerRoute: CommitmentTrackerRoute,
@@ -793,6 +834,7 @@ const rootRouteChildren: RootRouteChildren = {
   EventLifecycleRoute: EventLifecycleRoute,
   FundsProjectsRoute: FundsProjectsRoute,
   GrievancesRoute: GrievancesRoute,
+  InboxRoute: InboxRoute,
   IssueRadarRoute: IssueRadarRoute,
   KnowledgeBaseRoute: KnowledgeBaseRoute,
   LocalBodyMeetingsRoute: LocalBodyMeetingsRoute,
@@ -817,13 +859,3 @@ const rootRouteChildren: RootRouteChildren = {
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)
   ._addFileTypes<FileRouteTypes>()
-
-import type { getRouter } from './router.tsx'
-import type { startInstance } from './start.ts'
-declare module '@tanstack/react-start' {
-  interface Register {
-    ssr: true
-    router: Awaited<ReturnType<typeof getRouter>>
-    config: Awaited<ReturnType<typeof startInstance.getOptions>>
-  }
-}
