@@ -527,6 +527,7 @@ function MediaWatchPage() {
       {/* Modals + Drawer */}
       <ActionDialog req={action} onClose={() => setAction(null)} onSubmit={runAction} />
       <IssueTimelineDrawer issueKey={timelineFor} articles={articles} onClose={() => setTimelineFor(null)} onAction={(k, a) => openAction({ key: k, article: a })} onIssueAction={(k, key) => { setTimelineFor(null); openAction({ key: k, issueKey: key }); }} />
+      <DraftMediaResponseDialog open={!!draftSeed} onClose={() => setDraftSeed(null)} seed={draftSeed ?? undefined} />
 
       {(briefingCount > 0 || digestCount > 0) && (
         <div className="text-[11px] text-slate-400">{briefingCount} added to today's briefing · {digestCount} in weekly digest</div>
