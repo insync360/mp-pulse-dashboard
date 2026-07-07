@@ -147,12 +147,13 @@ function SettingsTeamPage() {
       </div>
 
       <Tabs defaultValue="accounts">
-        <TabsList>
+        <TabsList className="flex-wrap h-auto">
           <TabsTrigger value="accounts">Connected Accounts</TabsTrigger>
           <TabsTrigger value="team">Team & Roles</TabsTrigger>
           <TabsTrigger value="intake">Intake Configuration</TabsTrigger>
           <TabsTrigger value="prefs">Preferences</TabsTrigger>
           <TabsTrigger value="media">Media Sources & Watch Rules</TabsTrigger>
+          <TabsTrigger value="letterheads">Templates & Letterheads</TabsTrigger>
         </TabsList>
 
         {/* ACCOUNTS */}
