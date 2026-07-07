@@ -669,6 +669,7 @@ function NewsCard({ a, onAction, onWatch, onIgnore, onTimeline }: { a: Article; 
           <p className="text-xs text-slate-600 mt-1.5 leading-relaxed"><span className="font-semibold text-navy">AI summary:</span> {a.summary}</p>
           <p className="text-xs text-slate-500 mt-1 leading-relaxed"><span className="font-semibold text-navy">Why relevant:</span> {a.whyRelevant}</p>
           <p className="text-xs text-slate-500 mt-1 leading-relaxed"><span className="font-semibold text-navy">Suggested:</span> {a.suggestedAction}</p>
+          <ArticleLinkedBadges articleId={a.id} />
         </div>
         <div className="flex flex-col items-end gap-1.5 shrink-0">
           <Badge variant="outline" className={statusTone[a.status]}>{a.status}</Badge>
@@ -688,9 +689,53 @@ function NewsCard({ a, onAction, onWatch, onIgnore, onTimeline }: { a: Article; 
             {b.label}
           </Button>
         ))}
+        <ConvertMenu article={a} />
         <Button size="sm" variant="ghost" className="h-7 text-xs text-slate-500 ml-auto" onClick={onIgnore}><X className="h-3 w-3 mr-1" />Ignore</Button>
       </div>
     </Card>
+  );
+}
+
+function ArticleLinkedBadges({ articleId }: { articleId: string }) {
+  const items = useLinkedForArticle(articleId);
+  return <LinkedRecordBadges items={items.map(l => ({ kind: l.kind, label: l.label }))} />;
+}
+
+function ConvertMenu({ article }: { article: Article }) {
+  const [open, setOpen] = useState(false);
+  const actions: { label: string; kind: "case" | "commitment" | "inspection" | "followup" | "event" | "briefing" | "social" | "journalist" | "broadcast"; make: () => string }[] = [
+    { label: "Create Case", kind: "case", make: () => `CASE-${Math.floor(Math.random()*9000+1000)} · ${article.topic}` },
+    { label: "Create Commitment", kind: "commitment", make: () => `Commitment: ${article.topic} action` },
+    { label: "Create Work Inspection", kind: "inspection", make: () => `Site inspection scheduled · ${article.topic}` },
+    { label: "Create Department Follow-up", kind: "followup", make: () => `Follow-up to concerned dept · ${article.topic}` },
+    { label: "Create Event / Visit", kind: "event", make: () => `Site visit event · ${article.topic}` },
+    { label: "Add to Daily Briefing", kind: "briefing", make: () => `Briefing item · ${article.headline.slice(0, 40)}…` },
+    { label: "Draft Social Post", kind: "social", make: () => `Social draft · ${article.topic}` },
+    { label: "Add Journalist to CRM", kind: "journalist", make: () => `Journalist added from ${article.source}` },
+    { label: "Send Broadcast", kind: "broadcast", make: () => `Broadcast queued · ${article.topic}` },
+  ];
+  return (
+    <>
+      <Button size="sm" variant="outline" className="h-7 text-xs" onClick={() => setOpen(true)}>Convert to…</Button>
+      <Dialog open={open} onOpenChange={setOpen}>
+        <DialogContent className="max-w-md">
+          <DialogHeader>
+            <DialogTitle className="text-navy">Convert news to record</DialogTitle>
+            <DialogDescription>{article.headline}</DialogDescription>
+          </DialogHeader>
+          <div className="grid grid-cols-2 gap-2">
+            {actions.map(a => (
+              <Button key={a.label} variant="outline" className="h-auto py-2 text-xs justify-start" onClick={() => {
+                const label = a.make();
+                addLinked(article.id, a.kind, label);
+                toast.success(`${a.label} · linked to article`);
+                setOpen(false);
+              }}>{a.label}</Button>
+            ))}
+          </div>
+        </DialogContent>
+      </Dialog>
+    </>
   );
 }
 
