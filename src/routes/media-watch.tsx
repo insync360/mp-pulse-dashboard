@@ -493,10 +493,10 @@ function MediaWatchPage() {
         </TabsContent>
 
         {/* PRESS DESK */}
-        <TabsContent value="press" className="mt-4 space-y-4"><PressDeskPanel /></TabsContent>
+        <TabsContent value="press" className="mt-4 space-y-4"><PressDeskPanel onDraft={() => setDraftSeed({})} /></TabsContent>
 
         {/* MEDIA OUTREACH */}
-        <TabsContent value="outreach" className="mt-4"><MediaOutreachPanel onAction={(k) => setAction({ key: k })} /></TabsContent>
+        <TabsContent value="outreach" className="mt-4"><MediaOutreachPanel /></TabsContent>
 
         {/* HASHTAGS */}
         <TabsContent value="hashtags" className="mt-4">
