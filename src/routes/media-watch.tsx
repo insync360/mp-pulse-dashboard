@@ -325,6 +325,37 @@ function MediaWatchPage() {
 
   const [action, setAction] = useState<ActionRequest | null>(null);
   const [timelineFor, setTimelineFor] = useState<string | null>(null);
+  const [draftSeed, setDraftSeed] = useState<DraftSeed | null>(null);
+
+  const draftKeys: ActionKey[] = ["draft-response", "draft-quote", "social-post"];
+  const openAction = (req: ActionRequest) => {
+    if (draftKeys.includes(req.key)) {
+      const responseTypeMap: Partial<Record<ActionKey, ResponseType>> = {
+        "draft-response": "Official Statement",
+        "draft-quote": "Quote for Media",
+        "social-post": "Social Media Response",
+      };
+      const toneMap: Partial<Record<ActionKey, Tone>> = {
+        "draft-response": "Firm", "draft-quote": "Reassuring", "social-post": "Celebratory",
+      };
+      const positionMap: Partial<Record<ActionKey, Position>> = {
+        "draft-response": "Share action already taken",
+        "draft-quote": "Acknowledge issue",
+        "social-post": "Share action already taken",
+      };
+      setDraftSeed({
+        sourceArticleId: req.article?.id,
+        sourceHeadline: req.article?.headline,
+        issueSummary: req.article?.summary,
+        suggestedResponseType: responseTypeMap[req.key],
+        suggestedTone: toneMap[req.key],
+        suggestedPosition: positionMap[req.key],
+      });
+      if (req.article) setStatus(req.article.id, "Response Drafted");
+      return;
+    }
+    setAction(req);
+  };
 
   const [briefingCount, setBriefingCount] = useState(0);
   const [digestCount, setDigestCount] = useState(0);
