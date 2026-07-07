@@ -151,6 +151,7 @@ function SettingsTeamPage() {
           <TabsTrigger value="team">Team & Roles</TabsTrigger>
           <TabsTrigger value="intake">Intake Configuration</TabsTrigger>
           <TabsTrigger value="prefs">Preferences</TabsTrigger>
+          <TabsTrigger value="media">Media Sources & Watch Rules</TabsTrigger>
         </TabsList>
 
         {/* ACCOUNTS */}
