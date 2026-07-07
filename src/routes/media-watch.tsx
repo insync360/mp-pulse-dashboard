@@ -436,7 +436,7 @@ function MediaWatchPage() {
           </div>
           <div className="grid md:grid-cols-2 gap-3">
             {actionItems.slice(0, 4).map(a => (
-              <ActionNeededCard key={a.id} a={a} onAction={(k) => setAction({ key: k, article: a })} onIgnore={() => ignore(a.id)} onTimeline={() => a.issueKey && setTimelineFor(a.issueKey)} />
+              <ActionNeededCard key={a.id} a={a} onAction={(k) => openAction({ key: k, article: a })} onIgnore={() => ignore(a.id)} onTimeline={() => a.issueKey && setTimelineFor(a.issueKey)} />
             ))}
           </div>
         </Card>
@@ -472,7 +472,7 @@ function MediaWatchPage() {
           <div className="grid gap-3">
             {visible.map(a => (
               <NewsCard key={a.id} a={a}
-                onAction={(k) => setAction({ key: k, article: a })}
+                onAction={(k) => openAction({ key: k, article: a })}
                 onWatch={() => markWatched(a.id)}
                 onIgnore={() => ignore(a.id)}
                 onTimeline={() => a.issueKey && setTimelineFor(a.issueKey)}
@@ -484,12 +484,12 @@ function MediaWatchPage() {
 
         {/* ACTION NEEDED */}
         <TabsContent value="action" className="mt-4 space-y-3">
-          <ActionNeededTab items={actionItems} onAction={(k, a) => setAction({ key: k, article: a })} onIgnore={ignore} onTimeline={(k) => setTimelineFor(k)} />
+          <ActionNeededTab items={actionItems} onAction={(k, a) => openAction({ key: k, article: a })} onIgnore={ignore} onTimeline={(k) => setTimelineFor(k)} />
         </TabsContent>
 
         {/* REPEAT ISSUES */}
         <TabsContent value="repeat" className="mt-4 space-y-3">
-          <RepeatIssuesTab articles={articles} onTimeline={setTimelineFor} onAction={(k, a) => setAction({ key: k, article: a })} onIssueAction={(k, key) => setAction({ key: k, issueKey: key })} />
+          <RepeatIssuesTab articles={articles} onTimeline={setTimelineFor} onAction={(k, a) => openAction({ key: k, article: a })} onIssueAction={(k, key) => openAction({ key: k, issueKey: key })} />
         </TabsContent>
 
         {/* PRESS DESK */}
@@ -526,7 +526,7 @@ function MediaWatchPage() {
 
       {/* Modals + Drawer */}
       <ActionDialog req={action} onClose={() => setAction(null)} onSubmit={runAction} />
-      <IssueTimelineDrawer issueKey={timelineFor} articles={articles} onClose={() => setTimelineFor(null)} onAction={(k, a) => setAction({ key: k, article: a })} onIssueAction={(k, key) => { setTimelineFor(null); setAction({ key: k, issueKey: key }); }} />
+      <IssueTimelineDrawer issueKey={timelineFor} articles={articles} onClose={() => setTimelineFor(null)} onAction={(k, a) => openAction({ key: k, article: a })} onIssueAction={(k, key) => { setTimelineFor(null); openAction({ key: k, issueKey: key }); }} />
 
       {(briefingCount > 0 || digestCount > 0) && (
         <div className="text-[11px] text-slate-400">{briefingCount} added to today's briefing · {digestCount} in weekly digest</div>
