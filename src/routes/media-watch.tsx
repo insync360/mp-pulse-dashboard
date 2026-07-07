@@ -791,41 +791,7 @@ function RepeatIssuesTab({ articles, onTimeline, onAction, onIssueAction }: { ar
 }
 
 // ─────────── Media Outreach ───────────
-function MediaOutreachPanel({ onAction }: { onAction: (k: ActionKey) => void }) {
-  return (
-    <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
-      <Card className="p-4">
-        <h3 className="text-sm font-semibold text-navy mb-3 flex items-center gap-2"><Send className="h-4 w-4 text-saffron" /> Proactive outreach</h3>
-        <div className="space-y-2 text-xs">
-          <OutreachRow title="Namma Metro Phase 3 clearance" body="Positive story — pitch to 3 city desks" onGo={() => onAction("send-response")} />
-          <OutreachRow title="Mahadevapura lake shramadaan" body="Photo essay pitch to Prajavani + Deccan Herald" onGo={() => onAction("social-post")} />
-          <OutreachRow title="MP field visit to Whitefield SWD works" body="Invite Times of India + TV9 for coverage" onGo={() => onAction("add-journalist")} />
-        </div>
-        <Button size="sm" className="mt-3 bg-navy hover:bg-navy/90 text-white" onClick={() => onAction("draft-quote")}>New Outreach</Button>
-      </Card>
-      <Card className="p-4">
-        <h3 className="text-sm font-semibold text-navy mb-3 flex items-center gap-2"><Newspaper className="h-4 w-4 text-saffron" /> Weekly digest queue</h3>
-        <div className="space-y-2 text-xs text-slate-700">
-          <div className="rounded border border-slate-200 p-2.5"><span className="font-medium text-navy">Semiconductor incentive win</span><p className="text-slate-500 mt-0.5">Positive · National · queued for Friday digest</p></div>
-          <div className="rounded border border-slate-200 p-2.5"><span className="font-medium text-navy">Upper Bhadra outlay</span><p className="text-slate-500 mt-0.5">Positive · State · queued</p></div>
-          <div className="rounded border border-slate-200 p-2.5"><span className="font-medium text-navy">Mahadevapura lake volunteers</span><p className="text-slate-500 mt-0.5">Positive · Constituency · queued</p></div>
-        </div>
-        <Button size="sm" variant="outline" className="mt-3" onClick={() => onAction("weekly-digest")}>Add to Digest</Button>
-      </Card>
-    </div>
-  );
-}
-function OutreachRow({ title, body, onGo }: { title: string; body: string; onGo: () => void }) {
-  return (
-    <div className="rounded border border-slate-200 p-2.5 flex items-center gap-2">
-      <div className="min-w-0 flex-1">
-        <div className="font-medium text-navy">{title}</div>
-        <div className="text-slate-500">{body}</div>
-      </div>
-      <Button size="sm" variant="outline" className="h-7 text-xs" onClick={onGo}>Start</Button>
-    </div>
-  );
-}
+// (Media Outreach panel moved to press-desk-workflow.tsx)
 
 // ─────────── Source Health ───────────
 function SourceHealthTab() {
