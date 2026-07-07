@@ -15,6 +15,7 @@ import { Switch } from "@/components/ui/switch";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger, DialogFooter } from "@/components/ui/dialog";
 import { toast } from "sonner";
+import { MediaSourcesTab } from "@/components/media-sources-tab";
 
 export const Route = createFileRoute("/settings-team")({
   head: () => ({ meta: [{ title: "Settings & Team — MP Pulse" }] }),
@@ -150,6 +151,7 @@ function SettingsTeamPage() {
           <TabsTrigger value="team">Team & Roles</TabsTrigger>
           <TabsTrigger value="intake">Intake Configuration</TabsTrigger>
           <TabsTrigger value="prefs">Preferences</TabsTrigger>
+          <TabsTrigger value="media">Media Sources & Watch Rules</TabsTrigger>
         </TabsList>
 
         {/* ACCOUNTS */}
@@ -368,6 +370,11 @@ function SettingsTeamPage() {
               <Button variant="outline" size="sm" className="mt-1"><FileSearch className="w-3.5 h-3.5 mr-1.5" /> View Audit Log</Button>
             </CardContent>
           </Card>
+        </TabsContent>
+
+        {/* MEDIA SOURCES & WATCH RULES */}
+        <TabsContent value="media" className="mt-5">
+          <MediaSourcesTab />
         </TabsContent>
       </Tabs>
     </div>
