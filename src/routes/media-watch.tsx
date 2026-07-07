@@ -16,6 +16,8 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription, DialogFooter } from "@/components/ui/dialog";
 import { Sheet, SheetContent, SheetHeader, SheetTitle } from "@/components/ui/sheet";
 import { toast } from "sonner";
+import { PressDeskPanel, MediaOutreachPanel, DraftMediaResponseDialog, LinkedRecordBadges, type DraftSeed } from "@/components/press-desk-workflow";
+import { addLinked, useLinkedForArticle, type ResponseType, type Tone, type Position } from "@/lib/press-desk-store";
 
 export const Route = createFileRoute("/media-watch")({
   head: () => ({
@@ -323,6 +325,37 @@ function MediaWatchPage() {
 
   const [action, setAction] = useState<ActionRequest | null>(null);
   const [timelineFor, setTimelineFor] = useState<string | null>(null);
+  const [draftSeed, setDraftSeed] = useState<DraftSeed | null>(null);
+
+  const draftKeys: ActionKey[] = ["draft-response", "draft-quote", "social-post"];
+  const openAction = (req: ActionRequest) => {
+    if (draftKeys.includes(req.key)) {
+      const responseTypeMap: Partial<Record<ActionKey, ResponseType>> = {
+        "draft-response": "Official Statement",
+        "draft-quote": "Quote for Media",
+        "social-post": "Social Media Response",
+      };
+      const toneMap: Partial<Record<ActionKey, Tone>> = {
+        "draft-response": "Firm", "draft-quote": "Reassuring", "social-post": "Celebratory",
+      };
+      const positionMap: Partial<Record<ActionKey, Position>> = {
+        "draft-response": "Share action already taken",
+        "draft-quote": "Acknowledge issue",
+        "social-post": "Share action already taken",
+      };
+      setDraftSeed({
+        sourceArticleId: req.article?.id,
+        sourceHeadline: req.article?.headline,
+        issueSummary: req.article?.summary,
+        suggestedResponseType: responseTypeMap[req.key],
+        suggestedTone: toneMap[req.key],
+        suggestedPosition: positionMap[req.key],
+      });
+      if (req.article) setStatus(req.article.id, "Response Drafted");
+      return;
+    }
+    setAction(req);
+  };
 
   const [briefingCount, setBriefingCount] = useState(0);
   const [digestCount, setDigestCount] = useState(0);
@@ -403,7 +436,7 @@ function MediaWatchPage() {
           </div>
           <div className="grid md:grid-cols-2 gap-3">
             {actionItems.slice(0, 4).map(a => (
-              <ActionNeededCard key={a.id} a={a} onAction={(k) => setAction({ key: k, article: a })} onIgnore={() => ignore(a.id)} onTimeline={() => a.issueKey && setTimelineFor(a.issueKey)} />
+              <ActionNeededCard key={a.id} a={a} onAction={(k) => openAction({ key: k, article: a })} onIgnore={() => ignore(a.id)} onTimeline={() => a.issueKey && setTimelineFor(a.issueKey)} />
             ))}
           </div>
         </Card>
@@ -439,7 +472,7 @@ function MediaWatchPage() {
           <div className="grid gap-3">
             {visible.map(a => (
               <NewsCard key={a.id} a={a}
-                onAction={(k) => setAction({ key: k, article: a })}
+                onAction={(k) => openAction({ key: k, article: a })}
                 onWatch={() => markWatched(a.id)}
                 onIgnore={() => ignore(a.id)}
                 onTimeline={() => a.issueKey && setTimelineFor(a.issueKey)}
@@ -451,19 +484,19 @@ function MediaWatchPage() {
 
         {/* ACTION NEEDED */}
         <TabsContent value="action" className="mt-4 space-y-3">
-          <ActionNeededTab items={actionItems} onAction={(k, a) => setAction({ key: k, article: a })} onIgnore={ignore} onTimeline={(k) => setTimelineFor(k)} />
+          <ActionNeededTab items={actionItems} onAction={(k, a) => openAction({ key: k, article: a })} onIgnore={ignore} onTimeline={(k) => setTimelineFor(k)} />
         </TabsContent>
 
         {/* REPEAT ISSUES */}
         <TabsContent value="repeat" className="mt-4 space-y-3">
-          <RepeatIssuesTab articles={articles} onTimeline={setTimelineFor} onAction={(k, a) => setAction({ key: k, article: a })} onIssueAction={(k, key) => setAction({ key: k, issueKey: key })} />
+          <RepeatIssuesTab articles={articles} onTimeline={setTimelineFor} onAction={(k, a) => openAction({ key: k, article: a })} onIssueAction={(k, key) => openAction({ key: k, issueKey: key })} />
         </TabsContent>
 
         {/* PRESS DESK */}
-        <TabsContent value="press" className="mt-4 space-y-4"><PressDeskPanel /></TabsContent>
+        <TabsContent value="press" className="mt-4 space-y-4"><PressDeskPanel onDraft={() => setDraftSeed({})} /></TabsContent>
 
         {/* MEDIA OUTREACH */}
-        <TabsContent value="outreach" className="mt-4"><MediaOutreachPanel onAction={(k) => setAction({ key: k })} /></TabsContent>
+        <TabsContent value="outreach" className="mt-4"><MediaOutreachPanel /></TabsContent>
 
         {/* HASHTAGS */}
         <TabsContent value="hashtags" className="mt-4">
@@ -493,7 +526,8 @@ function MediaWatchPage() {
 
       {/* Modals + Drawer */}
       <ActionDialog req={action} onClose={() => setAction(null)} onSubmit={runAction} />
-      <IssueTimelineDrawer issueKey={timelineFor} articles={articles} onClose={() => setTimelineFor(null)} onAction={(k, a) => setAction({ key: k, article: a })} onIssueAction={(k, key) => { setTimelineFor(null); setAction({ key: k, issueKey: key }); }} />
+      <IssueTimelineDrawer issueKey={timelineFor} articles={articles} onClose={() => setTimelineFor(null)} onAction={(k, a) => openAction({ key: k, article: a })} onIssueAction={(k, key) => { setTimelineFor(null); openAction({ key: k, issueKey: key }); }} />
+      <DraftMediaResponseDialog open={!!draftSeed} onClose={() => setDraftSeed(null)} seed={draftSeed ?? undefined} />
 
       {(briefingCount > 0 || digestCount > 0) && (
         <div className="text-[11px] text-slate-400">{briefingCount} added to today's briefing · {digestCount} in weekly digest</div>
@@ -635,6 +669,7 @@ function NewsCard({ a, onAction, onWatch, onIgnore, onTimeline }: { a: Article; 
           <p className="text-xs text-slate-600 mt-1.5 leading-relaxed"><span className="font-semibold text-navy">AI summary:</span> {a.summary}</p>
           <p className="text-xs text-slate-500 mt-1 leading-relaxed"><span className="font-semibold text-navy">Why relevant:</span> {a.whyRelevant}</p>
           <p className="text-xs text-slate-500 mt-1 leading-relaxed"><span className="font-semibold text-navy">Suggested:</span> {a.suggestedAction}</p>
+          <ArticleLinkedBadges articleId={a.id} />
         </div>
         <div className="flex flex-col items-end gap-1.5 shrink-0">
           <Badge variant="outline" className={statusTone[a.status]}>{a.status}</Badge>
@@ -654,9 +689,53 @@ function NewsCard({ a, onAction, onWatch, onIgnore, onTimeline }: { a: Article; 
             {b.label}
           </Button>
         ))}
+        <ConvertMenu article={a} />
         <Button size="sm" variant="ghost" className="h-7 text-xs text-slate-500 ml-auto" onClick={onIgnore}><X className="h-3 w-3 mr-1" />Ignore</Button>
       </div>
     </Card>
+  );
+}
+
+function ArticleLinkedBadges({ articleId }: { articleId: string }) {
+  const items = useLinkedForArticle(articleId);
+  return <LinkedRecordBadges items={items.map(l => ({ kind: l.kind, label: l.label }))} />;
+}
+
+function ConvertMenu({ article }: { article: Article }) {
+  const [open, setOpen] = useState(false);
+  const actions: { label: string; kind: "case" | "commitment" | "inspection" | "followup" | "event" | "briefing" | "social" | "journalist" | "broadcast"; make: () => string }[] = [
+    { label: "Create Case", kind: "case", make: () => `CASE-${Math.floor(Math.random()*9000+1000)} · ${article.topic}` },
+    { label: "Create Commitment", kind: "commitment", make: () => `Commitment: ${article.topic} action` },
+    { label: "Create Work Inspection", kind: "inspection", make: () => `Site inspection scheduled · ${article.topic}` },
+    { label: "Create Department Follow-up", kind: "followup", make: () => `Follow-up to concerned dept · ${article.topic}` },
+    { label: "Create Event / Visit", kind: "event", make: () => `Site visit event · ${article.topic}` },
+    { label: "Add to Daily Briefing", kind: "briefing", make: () => `Briefing item · ${article.headline.slice(0, 40)}…` },
+    { label: "Draft Social Post", kind: "social", make: () => `Social draft · ${article.topic}` },
+    { label: "Add Journalist to CRM", kind: "journalist", make: () => `Journalist added from ${article.source}` },
+    { label: "Send Broadcast", kind: "broadcast", make: () => `Broadcast queued · ${article.topic}` },
+  ];
+  return (
+    <>
+      <Button size="sm" variant="outline" className="h-7 text-xs" onClick={() => setOpen(true)}>Convert to…</Button>
+      <Dialog open={open} onOpenChange={setOpen}>
+        <DialogContent className="max-w-md">
+          <DialogHeader>
+            <DialogTitle className="text-navy">Convert news to record</DialogTitle>
+            <DialogDescription>{article.headline}</DialogDescription>
+          </DialogHeader>
+          <div className="grid grid-cols-2 gap-2">
+            {actions.map(a => (
+              <Button key={a.label} variant="outline" className="h-auto py-2 text-xs justify-start" onClick={() => {
+                const label = a.make();
+                addLinked(article.id, a.kind, label);
+                toast.success(`${a.label} · linked to article`);
+                setOpen(false);
+              }}>{a.label}</Button>
+            ))}
+          </div>
+        </DialogContent>
+      </Dialog>
+    </>
   );
 }
 
@@ -789,41 +868,7 @@ function RepeatIssuesTab({ articles, onTimeline, onAction, onIssueAction }: { ar
 }
 
 // ─────────── Media Outreach ───────────
-function MediaOutreachPanel({ onAction }: { onAction: (k: ActionKey) => void }) {
-  return (
-    <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
-      <Card className="p-4">
-        <h3 className="text-sm font-semibold text-navy mb-3 flex items-center gap-2"><Send className="h-4 w-4 text-saffron" /> Proactive outreach</h3>
-        <div className="space-y-2 text-xs">
-          <OutreachRow title="Namma Metro Phase 3 clearance" body="Positive story — pitch to 3 city desks" onGo={() => onAction("send-response")} />
-          <OutreachRow title="Mahadevapura lake shramadaan" body="Photo essay pitch to Prajavani + Deccan Herald" onGo={() => onAction("social-post")} />
-          <OutreachRow title="MP field visit to Whitefield SWD works" body="Invite Times of India + TV9 for coverage" onGo={() => onAction("add-journalist")} />
-        </div>
-        <Button size="sm" className="mt-3 bg-navy hover:bg-navy/90 text-white" onClick={() => onAction("draft-quote")}>New Outreach</Button>
-      </Card>
-      <Card className="p-4">
-        <h3 className="text-sm font-semibold text-navy mb-3 flex items-center gap-2"><Newspaper className="h-4 w-4 text-saffron" /> Weekly digest queue</h3>
-        <div className="space-y-2 text-xs text-slate-700">
-          <div className="rounded border border-slate-200 p-2.5"><span className="font-medium text-navy">Semiconductor incentive win</span><p className="text-slate-500 mt-0.5">Positive · National · queued for Friday digest</p></div>
-          <div className="rounded border border-slate-200 p-2.5"><span className="font-medium text-navy">Upper Bhadra outlay</span><p className="text-slate-500 mt-0.5">Positive · State · queued</p></div>
-          <div className="rounded border border-slate-200 p-2.5"><span className="font-medium text-navy">Mahadevapura lake volunteers</span><p className="text-slate-500 mt-0.5">Positive · Constituency · queued</p></div>
-        </div>
-        <Button size="sm" variant="outline" className="mt-3" onClick={() => onAction("weekly-digest")}>Add to Digest</Button>
-      </Card>
-    </div>
-  );
-}
-function OutreachRow({ title, body, onGo }: { title: string; body: string; onGo: () => void }) {
-  return (
-    <div className="rounded border border-slate-200 p-2.5 flex items-center gap-2">
-      <div className="min-w-0 flex-1">
-        <div className="font-medium text-navy">{title}</div>
-        <div className="text-slate-500">{body}</div>
-      </div>
-      <Button size="sm" variant="outline" className="h-7 text-xs" onClick={onGo}>Start</Button>
-    </div>
-  );
-}
+// (Media Outreach panel moved to press-desk-workflow.tsx)
 
 // ─────────── Source Health ───────────
 function SourceHealthTab() {
@@ -1020,75 +1065,5 @@ function Kv({ k, v }: { k: string; v: string }) {
   );
 }
 
-// ─────────── Press Desk (preserved) ───────────
-type PressContact = { name: string; outlet: string; beat: string; phone: string; relationship: "Warm" | "Steady" | "Cold"; lastTouch: string };
-const PRESS_CONTACTS: PressContact[] = [
-  { name: "A. Prakash", outlet: "Prajavani", beat: "Politics — Bengaluru East", phone: "+91 98800 77881", relationship: "Warm", lastTouch: "4 d" },
-  { name: "R. Iyer", outlet: "Deccan Herald", beat: "Civic / BBMP", phone: "+91 98452 33001", relationship: "Steady", lastTouch: "12 d" },
-  { name: "S. Murthy", outlet: "Times of India", beat: "Infrastructure", phone: "+91 98452 99110", relationship: "Steady", lastTouch: "8 d" },
-  { name: "Anjali Pinto", outlet: "The Hindu", beat: "Policy & Parliament", phone: "+91 98860 21134", relationship: "Warm", lastTouch: "2 d" },
-  { name: "K. Hegde", outlet: "Vijaya Karnataka", beat: "State politics", phone: "+91 99004 19087", relationship: "Cold", lastTouch: "42 d" },
-  { name: "Rohit Kumar", outlet: "TV9 Kannada", beat: "Breaking / city", phone: "+91 99000 33491", relationship: "Steady", lastTouch: "6 d" },
-];
-type PressQuery = { id: string; journalist: string; outlet: string; topic: string; deadline: string; sensitivity: "Low" | "Medium" | "High"; status: "Incoming" | "Drafting" | "Awaiting MP" | "Approved" | "Sent"; draft?: string; approvedQuote?: string; };
-const PRESS_QUERIES: PressQuery[] = [
-  { id: "PQ-041", journalist: "R. Iyer", outlet: "Deccan Herald", topic: "MP's position on Mahadayi water sharing in Belagavi belt", deadline: "Today 18:00", sensitivity: "High", status: "Awaiting MP", draft: "On Mahadayi, our position is clear: every drop allocated by the tribunal must reach Karnataka farmers without delay." },
-  { id: "PQ-040", journalist: "S. Murthy", outlet: "Times of India", topic: "ORR last-mile shuttle progress", deadline: "Tomorrow 11:00", sensitivity: "Medium", status: "Drafting" },
-  { id: "PQ-039", journalist: "Anjali Pinto", outlet: "The Hindu", topic: "Citizen Pulse — case management approach", deadline: "Fri 14:00", sensitivity: "Low", status: "Approved", approvedQuote: "Every grievance gets a ticket, an owner, and a deadline." },
-];
-const sensTone: Record<PressQuery["sensitivity"], string> = { Low: "bg-emerald-50 text-emerald-700 border-emerald-200", Medium: "bg-amber-50 text-amber-800 border-amber-200", High: "bg-red-50 text-red-700 border-red-200" };
-const pqStatusTone: Record<PressQuery["status"], string> = { Incoming: "bg-slate-100 text-slate-700 border-slate-200", Drafting: "bg-blue-50 text-blue-700 border-blue-200", "Awaiting MP": "bg-saffron/15 text-saffron border-saffron/40", Approved: "bg-emerald-50 text-emerald-700 border-emerald-200", Sent: "bg-navy/5 text-navy border-navy/20" };
+// (Old inline Press Desk removed — see PressDeskPanel in press-desk-workflow.tsx)
 
-function PressDeskPanel() {
-  return (
-    <div className="grid grid-cols-1 lg:grid-cols-3 gap-4">
-      <div className="lg:col-span-2 space-y-3">
-        <Card className="p-4">
-          <h3 className="text-sm font-semibold text-navy mb-3">Incoming press queries</h3>
-          <div className="space-y-3">
-            {PRESS_QUERIES.map(q => (
-              <div key={q.id} className="rounded-lg border p-3">
-                <div className="flex items-center gap-2 flex-wrap text-xs">
-                  <span className="font-semibold text-navy">{q.journalist}</span>
-                  <span className="text-slate-500">· {q.outlet}</span>
-                  <Badge variant="outline" className={sensTone[q.sensitivity]}>{q.sensitivity} sensitivity</Badge>
-                  <Badge variant="outline" className={pqStatusTone[q.status]}>{q.status}</Badge>
-                  <span className="ml-auto text-slate-500">Deadline: <span className="font-medium text-navy">{q.deadline}</span></span>
-                </div>
-                <div className="text-sm text-slate-900 mt-1.5 font-medium">{q.topic}</div>
-                {q.draft && <div className="mt-2 rounded-md bg-slate-50 border border-slate-200 p-2.5 text-xs text-slate-700"><span className="text-[10px] uppercase text-slate-500">Draft response</span><p className="mt-1">{q.draft}</p></div>}
-                {q.approvedQuote && <div className="mt-2 rounded-md bg-emerald-50 border border-emerald-200 p-2.5 text-xs text-emerald-900"><span className="text-[10px] uppercase text-emerald-700">✓ Approved quote</span><p className="mt-1 italic">"{q.approvedQuote}"</p></div>}
-                <div className="mt-2 flex flex-wrap gap-1.5">
-                  <Button size="sm" className="h-7 text-xs bg-navy text-white hover:bg-navy/90" onClick={() => toast.success("Response drafted")}>Draft response</Button>
-                  <Button size="sm" variant="outline" className="h-7 text-xs" onClick={() => toast.success("Sent to MP")}>Send to MP</Button>
-                  <Button size="sm" variant="outline" className="h-7 text-xs" onClick={() => toast.success("Coverage logged")}>Log coverage</Button>
-                </div>
-              </div>
-            ))}
-          </div>
-        </Card>
-      </div>
-      <Card className="p-4">
-        <h3 className="text-sm font-semibold text-navy mb-3">Media contacts</h3>
-        <div className="space-y-2.5">
-          {PRESS_CONTACTS.map(c => (
-            <div key={c.name} className="rounded-md border p-2.5">
-              <div className="flex items-center justify-between gap-2">
-                <div>
-                  <div className="font-medium text-navy text-sm">{c.name}</div>
-                  <div className="text-[11px] text-slate-500">{c.outlet} · {c.beat}</div>
-                </div>
-                <Badge variant="outline" className={
-                  c.relationship === "Warm" ? "bg-emerald-50 text-emerald-700 border-emerald-200 text-[10px]" :
-                  c.relationship === "Steady" ? "bg-blue-50 text-blue-700 border-blue-200 text-[10px]" :
-                  "bg-rose-50 text-rose-700 border-rose-200 text-[10px]"
-                }>{c.relationship}</Badge>
-              </div>
-              <div className="text-[10px] text-slate-400 mt-1.5">{c.phone} · last touch {c.lastTouch}</div>
-            </div>
-          ))}
-        </div>
-      </Card>
-    </div>
-  );
-}

@@ -16,6 +16,7 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger, DialogFooter } from "@/components/ui/dialog";
 import { toast } from "sonner";
 import { MediaSourcesTab } from "@/components/media-sources-tab";
+import { TemplatesLetterheadsTab } from "@/components/templates-letterheads-tab";
 
 export const Route = createFileRoute("/settings-team")({
   head: () => ({ meta: [{ title: "Settings & Team — MP Pulse" }] }),
@@ -146,12 +147,13 @@ function SettingsTeamPage() {
       </div>
 
       <Tabs defaultValue="accounts">
-        <TabsList>
+        <TabsList className="flex-wrap h-auto">
           <TabsTrigger value="accounts">Connected Accounts</TabsTrigger>
           <TabsTrigger value="team">Team & Roles</TabsTrigger>
           <TabsTrigger value="intake">Intake Configuration</TabsTrigger>
           <TabsTrigger value="prefs">Preferences</TabsTrigger>
           <TabsTrigger value="media">Media Sources & Watch Rules</TabsTrigger>
+          <TabsTrigger value="letterheads">Templates & Letterheads</TabsTrigger>
         </TabsList>
 
         {/* ACCOUNTS */}
@@ -375,6 +377,10 @@ function SettingsTeamPage() {
         {/* MEDIA SOURCES & WATCH RULES */}
         <TabsContent value="media" className="mt-5">
           <MediaSourcesTab />
+        </TabsContent>
+
+        <TabsContent value="letterheads" className="mt-5">
+          <TemplatesLetterheadsTab />
         </TabsContent>
       </Tabs>
     </div>
