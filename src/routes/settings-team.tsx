@@ -378,6 +378,10 @@ function SettingsTeamPage() {
         <TabsContent value="media" className="mt-5">
           <MediaSourcesTab />
         </TabsContent>
+
+        <TabsContent value="letterheads" className="mt-5">
+          <TemplatesLetterheadsTab />
+        </TabsContent>
       </Tabs>
     </div>
   );
