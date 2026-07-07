@@ -371,7 +371,6 @@ function SettingsTeamPage() {
             </CardContent>
           </Card>
         </TabsContent>
-        </TabsContent>
 
         {/* MEDIA SOURCES & WATCH RULES */}
         <TabsContent value="media" className="mt-5">
