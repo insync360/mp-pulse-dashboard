@@ -16,6 +16,7 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger, DialogFooter } from "@/components/ui/dialog";
 import { toast } from "sonner";
 import { MediaSourcesTab } from "@/components/media-sources-tab";
+import { TemplatesLetterheadsTab } from "@/components/templates-letterheads-tab";
 
 export const Route = createFileRoute("/settings-team")({
   head: () => ({ meta: [{ title: "Settings & Team — MP Pulse" }] }),
