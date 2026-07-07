@@ -16,6 +16,8 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription, DialogFooter } from "@/components/ui/dialog";
 import { Sheet, SheetContent, SheetHeader, SheetTitle } from "@/components/ui/sheet";
 import { toast } from "sonner";
+import { PressDeskPanel, MediaOutreachPanel, DraftMediaResponseDialog, LinkedRecordBadges, type DraftSeed } from "@/components/press-desk-workflow";
+import { addLinked, useLinkedForArticle, type ResponseType, type Tone, type Position } from "@/lib/press-desk-store";
 
 export const Route = createFileRoute("/media-watch")({
   head: () => ({
